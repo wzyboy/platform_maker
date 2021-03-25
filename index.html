@@ -5,7 +5,12 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="styles/styles.css" />
-        
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap"
+            rel="stylesheet"
+        />
+
         <script src="https://unpkg.com/mitt/dist/mitt.umd.js"></script>
         <script src="js/phaser.js"></script>
         <script src="js/main-scene.js"></script>
@@ -15,7 +20,19 @@
     </head>
     <body>
         <div id="ui">
-            <div class="top-bar"></div>
+            <div class="top-bar">
+                <div class="top-bar__tab-con">
+                    <div class="top-bar__tab" v-for="(tab, index) in tabs">
+                        <p>{{tab.name}}</p>
+                        <button v-if="!tab.playing" @click="playGame(index)">
+                            <i class="fas fa-play-circle"></i>
+                        </button>
+                        <button v-if="tab.playing" @click="stopGame(index)">
+                            <i class="fas fa-stop-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="main">
                 <div class="tool-bar">
                     <button
@@ -24,6 +41,7 @@
                         v-for="(tool, index) in tools"
                     >
                         <i :class="'fas fa-' + tool.icon"></i>
+                        <p>{{tool.name}}</p>
                     </button>
                 </div>
                 <div class="viewport-con">

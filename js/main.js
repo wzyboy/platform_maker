@@ -1,6 +1,8 @@
 const emitter = mitt();
 const config = {
     type: Phaser.AUTO,
+    // pixelArt: true,
+    antialias: false,
     scale: {
         mode: Phaser.Scale.RESIZE,
         parent: 'viewport',
@@ -43,6 +45,16 @@ const UI = {
                     name: 'pan',
                     icon: 'arrows-alt'
                 },
+                {
+                    name: 'start point',
+                    icon: 'sign-in-alt'
+                },
+            ],
+            tabs: [
+                {
+                    name: 'version 1',
+                    playing: false,
+                }
             ]
         }
     },
@@ -56,6 +68,14 @@ const UI = {
             if (this.scene) {
                 this.scene.selectedTool = newTool;
             }
+        },
+        playGame(index) {
+            this.tabs[index].playing = true;
+            this.scene.playGame();
+        },
+        stopGame(index) {
+            this.tabs[index].playing = false;
+            this.scene.stopGame();
         }
     },
     mounted() {
