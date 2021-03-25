@@ -39,7 +39,7 @@ canvas {
     flex-direction: column;
     
     &__tool {
-        font-size: 1.5rem;
+        font-size: 1rem;
 
         height: 50px;
         display: flex;
@@ -49,11 +49,23 @@ canvas {
         border: none;
         background-color: #fff0;
         transition: background-color .4s ease;
+        opacity: .5;
+        > i {
+            transform: scale(1);
+            transition: transform .4s ease;
+        }
         &:hover {
             transition: background-color .1s ease;
             background-color: #ffff;
             cursor: pointer;
-            border: none;
+        }
+        &_selected {
+            opacity: 1;
+            > i {
+                transition: transform .1s ease;
+                transform: scale(2);
+            }
+            transition: background-color .1s ease;
         }
     }
 }

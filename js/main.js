@@ -1,3 +1,4 @@
+const emitter = mitt();
 const config = {
     type: Phaser.AUTO,
     scale: {
@@ -19,23 +20,50 @@ const config = {
 };
 const game = new Phaser.Game(config);
 
+const gameStatus = {
+
+};
+
 
 const UI = {
     data() {
         return {
-            game: game,
+            scene: null,
+            selectedTool: -1,
             tools: [
                 {
                     name: 'edit',
                     icon: 'pen'
-                }
+                },
+                {
+                    name: 'erase',
+                    icon: 'eraser'
+                },
+                {
+                    name: 'pan',
+                    icon: 'arrows-alt'
+                },
             ]
         }
     },
-    computed: {
-        activeScene() {
-            return game.scene.getScenes(true)[0];
+    watch: {
+        selectedTool(newTool) {
+            this.setTool(newTool);
         }
+    },
+    methods: {
+        setTool(newTool) {
+            if (this.scene) {
+                this.scene.selectedTool = newTool;
+            }
+        }
+    },
+    mounted() {
+        this.selectedTool = 0;
+        emitter.on('scene-load', scene => {
+            this.scene = scene;
+            this.setTool(this.selectedTool);
+        });
     }
 }
 

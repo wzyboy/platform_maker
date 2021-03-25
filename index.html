@@ -5,6 +5,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="styles/styles.css" />
+        
+        <script src="https://unpkg.com/mitt/dist/mitt.umd.js"></script>
         <script src="js/phaser.js"></script>
         <script src="js/main-scene.js"></script>
 
@@ -13,12 +15,14 @@
     </head>
     <body>
         <div id="ui">
-
-            <div class="top-bar">
-            </div>
+            <div class="top-bar"></div>
             <div class="main">
                 <div class="tool-bar">
-                    <button class="tool-bar__tool" v-for="tool in tools">
+                    <button
+                        :class="{'tool-bar__tool': true, 'tool-bar__tool_selected': selectedTool === index}"
+                        @click="selectedTool = index"
+                        v-for="(tool, index) in tools"
+                    >
                         <i :class="'fas fa-' + tool.icon"></i>
                     </button>
                 </div>
@@ -26,8 +30,6 @@
                     <div id="viewport"></div>
                 </div>
             </div>
-
-
         </div>
         <script src="js/main.js"></script>
     </body>
