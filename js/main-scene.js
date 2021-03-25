@@ -6,6 +6,8 @@ class MainScene extends Phaser.Scene {
         this.player;
 
         this.levelData = {};
+
+        this.toolState = 0;
     }
     
     preload() {

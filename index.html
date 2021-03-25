@@ -14,9 +14,14 @@
     <body>
         <div id="ui">
 
-            <div class="top-bar"></div>
+            <div class="top-bar">
+            </div>
             <div class="main">
-                <div class="tool-bar"></div>
+                <div class="tool-bar">
+                    <button class="tool-bar__tool" v-for="tool in tools">
+                        <i :class="'fas fa-' + tool.icon"></i>
+                    </button>
+                </div>
                 <div class="viewport-con">
                     <div id="viewport"></div>
                 </div>

@@ -1,3 +1,6 @@
+@import 'fontawesome.scss';
+@import 'solid.scss';
+
 body {
     margin: 0;
 }
@@ -31,6 +34,28 @@ canvas {
 .tool-bar {
     width: 50px;
     background-color: #ccc;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    
+    &__tool {
+        font-size: 1.5rem;
+
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        border: none;
+        background-color: #fff0;
+        transition: background-color .4s ease;
+        &:hover {
+            transition: background-color .1s ease;
+            background-color: #ffff;
+            cursor: pointer;
+            border: none;
+        }
+    }
 }
 
 .viewport-con {

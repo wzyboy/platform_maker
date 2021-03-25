@@ -24,7 +24,12 @@ const UI = {
     data() {
         return {
             game: game,
-            counter: 0
+            tools: [
+                {
+                    name: 'edit',
+                    icon: 'pen'
+                }
+            ]
         }
     },
     computed: {
