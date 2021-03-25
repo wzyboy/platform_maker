@@ -4,6 +4,8 @@ class MainScene extends Phaser.Scene {
         this.cellSize = 16;
         this.tiles;
         this.player;
+
+        this.levelData = {};
     }
     
     preload() {
@@ -29,8 +31,9 @@ class MainScene extends Phaser.Scene {
     
         this.input.on('pointerdown', e => {
             let cellSize = this.cellSize;
-            let cellX = Math.floor(e.downX / cellSize);
-            let cellY = Math.floor(e.downY / cellSize);
+            let cellX = Math.floor((e.downX + this.cameras.main.scrollX) / cellSize);
+            let cellY = Math.floor((e.downY + this.cameras.main.scrollY) / cellSize);
+            
             let tile = this.tiles.create(cellX * cellSize + cellSize / 2, cellY * cellSize + cellSize / 2, 'tiles', 0);
     
             tile.on('pointerdown', function () {
@@ -40,10 +43,12 @@ class MainScene extends Phaser.Scene {
         });
     
         this.physics.add.collider(this.player, this.tiles);
+
+        console.log(this.cameras.main);
     }
     update(delta) {
         this.playerMovement();
-        
+        this.cameras.main.startFollow(this.player, false, .001, .001);
     }
     
     playerMovement() {
