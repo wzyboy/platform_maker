@@ -6,10 +6,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="styles/styles.css" />
         <script src="js/phaser.js"></script>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="js/mianscene.js"></script>
         <title>Document</title>
     </head>
     <body>
-        <div id="viewport"></div>
+        <div id="ui">
+
+            <div class="top-bar"></div>
+            <div class="main">
+                <div class="tool-bar"></div>
+                <div class="viewport-con">
+                    <div id="viewport"></div>
+                </div>
+            </div>
+
+
+        </div>
         <script src="js/main.js"></script>
     </body>
 </html>

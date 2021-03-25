@@ -7,6 +7,33 @@ canvas {
 }
 
 #viewport {
-    width: 500px;
-    height: 500px;
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+}
+
+#ui {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-bar {
+    height: 50px;
+    background-color: #aaa;
+}
+.main {
+    flex: 1;
+    display: flex;
+}
+.tool-bar {
+    width: 50px;
+    background-color: #ccc;
+}
+
+.viewport-con {
+    position: relative;
+    flex: 1;
 }
