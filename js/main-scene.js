@@ -153,5 +153,7 @@ class MainScene extends Phaser.Scene {
         this.player.body.moves = false;
         this.player.x = this.player.startPosition.x;
         this.player.y = this.player.startPosition.y;
+        this.player.setVelocityX(0);
+        this.player.setVelocityY(0);
     }
 }
