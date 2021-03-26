@@ -6,6 +6,7 @@ class MainScene extends Phaser.Scene {
         this.levelData = {};
 
         this.selectedTool = -1;
+        this.playing = false;
     }
 
     preload() {
@@ -16,7 +17,6 @@ class MainScene extends Phaser.Scene {
                 frameWidth: 16,
                 frameHeight: 16,
             });
-
 
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -35,41 +35,56 @@ class MainScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.tiles);
         // this.cameras.main.startFollow(this.player, false, .1, .1);
         camera.zoom = 3;
+        camera.setBackgroundColor('RGBA(135, 206, 235, 1)');
 
-
+        // pointer click event
+        this.pointerDown = false;
         this.input.on('pointerdown', (e) => {
-            if (this.selectedTool === 3) {
-                this.placePlayer(e.worldX, e.worldY);
-            }
-        })
+            this.pointerDown = true;
+        });
+        this.input.on('pointerup', (e) => {
+            this.pointerDown = false;
+        });
         emitter.emit('scene-load', this);
 
     }
 
     placePlayer(x, y) {
-        if (this.player === undefined) {
-            this.player = this.physics.add.sprite(0, 0, 'tiles', 13);
-        }12
+        let player = this.player;
+        if (player === undefined) {
+            player = this.physics.add.sprite(0, 0, 'tiles', 13);
+            player.setCircle(player.displayWidth / 2);
+            this.player = player;
+        }
         let cellSize = this.cellSize;
         let cellX = Math.floor(x / cellSize);
         let cellY = Math.floor(y / cellSize);
 
-        this.player.x = cellX * cellSize + cellSize / 2;
-        this.player.y = cellY * cellSize + cellSize / 2;
+        player.x = cellX * cellSize + cellSize / 2;
+        player.y = cellY * cellSize + cellSize / 2;
 
-        this.player.startPosition = {
-            x: this.player.x,
-            y: this.player.y,
+        player.startPosition = {
+            x: player.x,
+            y: player.y,
         }
     }
 
     update(delta) {
-        this.playerMovement();
+
+        if (this.playing) {
+            this.playerMovement();
+        }
 
 
         let pointer = this.input.mousePointer;
 
-        if (pointer.isDown) {
+        if (this.pointerDown) {
+
+            // selected tool start point
+            if (this.selectedTool === 3) {
+                this.placePlayer(pointer.worldX, pointer.worldY);
+            }
+
             if (this.selectedTool === 2) {
 
                 let camera = this.cameras.main;
@@ -131,8 +146,10 @@ class MainScene extends Phaser.Scene {
 
     playGame() {
         this.player.body.moves = true;
+        this.playing = true;
     }
     stopGame() {
+        this.playing = false;
         this.player.body.moves = false;
         this.player.x = this.player.startPosition.x;
         this.player.y = this.player.startPosition.y;
