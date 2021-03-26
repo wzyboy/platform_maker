@@ -119,6 +119,7 @@ class MainScene extends Phaser.Scene {
                     });
                     tile.on('pointerdown', () => {
                         if (this.selectedTool === 1) {
+                            delete this.levelData[tile.mapKey];
                             tile.destroy();
                         }
                     });
