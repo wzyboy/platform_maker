@@ -47,6 +47,14 @@ canvas {
         border-radius: 1rem 1rem 0 0;
         > p {
             margin: 0;
+            margin-right: 30px;
+        }
+        > button {
+            border: none;
+            background: none;
+            font-size: 1rem;
+            width: 30px;
+            height: 30px;
         }
     }
 }

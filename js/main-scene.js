@@ -34,7 +34,7 @@ class MainScene extends Phaser.Scene {
 
         this.physics.add.collider(this.player, this.tiles);
         // this.cameras.main.startFollow(this.player, false, .1, .1);
-        camera.zoom = 2;
+        camera.zoom = 3;
 
 
         this.input.on('pointerdown', (e) => {
@@ -48,9 +48,8 @@ class MainScene extends Phaser.Scene {
 
     placePlayer(x, y) {
         if (this.player === undefined) {
-            this.player = this.physics.add.sprite(0, 0, 'tiles', 23);
-        }
-
+            this.player = this.physics.add.sprite(0, 0, 'tiles', 13);
+        }12
         let cellSize = this.cellSize;
         let cellX = Math.floor(x / cellSize);
         let cellY = Math.floor(y / cellSize);
@@ -114,10 +113,11 @@ class MainScene extends Phaser.Scene {
 
         if (this.keyA.isDown) {
             this.player.setVelocityX(-160);
-
+            this.player.flipX = true;
         }
         else if (this.keyD.isDown) {
             this.player.setVelocityX(160);
+            this.player.flipX = false;
 
         }
         else {
@@ -125,7 +125,7 @@ class MainScene extends Phaser.Scene {
 
         }
         if (this.keyW.isDown && this.player.body.touching.down) {
-            this.player.setVelocityY(-330);
+            this.player.setVelocityY(-230);
         }
     }
 

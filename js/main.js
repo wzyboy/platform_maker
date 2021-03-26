@@ -52,7 +52,7 @@ const UI = {
             ],
             tabs: [
                 {
-                    name: 'version 1',
+                    name: 'Version 1',
                     playing: false,
                 }
             ]
