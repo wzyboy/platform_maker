@@ -63,6 +63,9 @@ class MainScene extends Phaser.Scene {
         player.x = cellX * cellSize + cellSize / 2;
         player.y = cellY * cellSize + cellSize / 2;
 
+        this.player.setVelocityX(0);
+        this.player.setVelocityY(0);
+
         player.startPosition = {
             x: player.x,
             y: player.y,
@@ -99,13 +102,18 @@ class MainScene extends Phaser.Scene {
                 let cellX = Math.floor(pointer.worldX / cellSize);
                 let cellY = Math.floor(pointer.worldY / cellSize);
 
+                // hashmap key
                 let key = cellX + ',' + cellY;
+
+
                 if (!(cellX + ',' + cellY in this.levelData)) {
                     let tile = this.tiles.create(cellX * cellSize + cellSize / 2, cellY * cellSize + cellSize / 2, 'tiles', 0);
+                    tile.mapKey = key;
 
                     // selected tool erase
                     tile.on('pointermove', () => {
                         if (this.selectedTool === 1 && this.input.mousePointer.isDown) {
+                            delete this.levelData[tile.mapKey];
                             tile.destroy();
                         }
                     });
