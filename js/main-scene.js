@@ -164,6 +164,27 @@ class MainScene extends Phaser.Scene {
     }
 
 
+    toggleNeighbourCollision(x, y) {
+        const ntop = `${x},${y-1}`
+        const nleft = `${x-1},${y}`
+        const nright = `${x+1},${y}`
+        const ndown = `${x},${y+1}`
+
+        let neighbours = [ ntop, nleft, nright, ndown ]
+        console.log(neighbours);
+
+        if (ntop in this.levelData) {
+            this.levelData[ntop].body.checkCollision.down ^= true
+        } else if (nleft in this.levelData) {
+            this.levelData[nleft].body.checkCollision.right ^= true
+        } else if (nright in this.levelData) {
+            this.levelData[nright].body.checkCollision.left ^= true
+        } else if (ndown in this.levelData) {
+            this.levelData[ndown].body.checkCollision.top ^= true
+        }
+        console.log(this.levelData);
+    }
+
     playerMovement() {
 
         if (this.keyA.isDown) {
