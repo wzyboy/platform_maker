@@ -50,12 +50,16 @@ const UI = {
                     icon: 'sign-in-alt'
                 },
             ],
+            currentTab: 0,
             tabs: [
                 {
                     name: 'Version 1',
                     playing: false,
+                    mapData: {},
                 }
-            ]
+            ],
+            versions: [],
+            versionView: false,
         }
     },
     watch: {
@@ -84,7 +88,22 @@ const UI = {
             this.scene = scene;
             this.setTool(this.selectedTool);
         });
+        emitter.on('level-data-changed', mapInfo => {
+            this.tabs[this.currentTab].mapData.playerData = {
+                x: mapInfo.playerData.x,
+                y: mapInfo.playerData.y,
+            }
+
+            let keys = Object.keys(mapInfo.tileData);
+            this.tabs[this.currentTab].mapData.tileData = keys.map(key => {
+                let split = key.split(',');
+                return {
+                   x: split[0],
+                   y: split[1], 
+                }
+            });
+        })
     }
 }
 
-Vue.createApp(UI).mount('#ui')
+let ui = Vue.createApp(UI).mount('#ui')

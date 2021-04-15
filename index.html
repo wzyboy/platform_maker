@@ -21,6 +21,9 @@
     <body>
         <div id="ui">
             <div class="top-bar">
+                <button class="versions" @click="versionView = !versionView">
+                    <p>versions</p>
+                </button>
                 <div class="top-bar__tab-con">
                     <div class="top-bar__tab" v-for="(tab, index) in tabs">
                         <p>{{tab.name}}</p>
@@ -44,8 +47,12 @@
                         <p>{{tool.name}}</p>
                     </button>
                 </div>
+
                 <div class="viewport-con">
                     <div id="viewport"></div>
+                    <div class="version-view" v-show="versionView">
+                        <div v-for="version in versions"></div>
+                    </div>
                 </div>
             </div>
         </div>

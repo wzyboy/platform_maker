@@ -112,3 +112,27 @@ canvas {
     position: relative;
     flex: 1;
 }
+
+.versions {
+    margin: 0 10px;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    background-color: #eee;
+    border: none;
+    font-size: 1rem;
+    > p {
+        margin: 0;
+    }
+}
+.version-view {
+    background-color: #ddd;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 4fr);
+    grid-auto-rows: 200px;
+}

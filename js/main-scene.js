@@ -3,8 +3,6 @@ class MainScene extends Phaser.Scene {
         super({ key: "MainScene" })
         this.cellSize = 16;
 
-        this.levelData = {};
-
         this.selectedTool = -1;
         this.playing = false;
     }
@@ -25,17 +23,23 @@ class MainScene extends Phaser.Scene {
 
     }
     create() {
+
+        // set camera
         let camera = this.cameras.main;
+        camera.zoom = 3;
+        camera.setBackgroundColor('RGBA(135, 206, 235, 1)');
 
+
+        // create tiles container
         this.tiles = this.physics.add.staticGroup();
+        this.tileData = {};
 
+        // create players
         this.placePlayer(camera.width / 2, camera.height / 2);
         this.player.body.moves = false;
 
+        // check collision between tiles and player
         this.physics.add.collider(this.player, this.tiles);
-        // this.cameras.main.startFollow(this.player, false, .1, .1);
-        camera.zoom = 3;
-        camera.setBackgroundColor('RGBA(135, 206, 235, 1)');
 
         // pointer click event
         this.pointerDown = false;
@@ -45,15 +49,17 @@ class MainScene extends Phaser.Scene {
         this.input.on('pointerup', (e) => {
             this.pointerDown = false;
         });
-        emitter.emit('scene-load', this);
 
+        // tell vue js scene finished loading
+        emitter.emit('scene-load', this);
+        this.mapEdited();
     }
 
     placePlayer(x, y) {
         let player = this.player;
         if (player === undefined) {
             player = this.physics.add.sprite(0, 0, 'tiles', 13);
-            player.setCircle(player.displayWidth / 2);
+            // player.setCircle(player.displayWidth / 2);
             this.player = player;
         }
         let cellSize = this.cellSize;
@@ -70,6 +76,7 @@ class MainScene extends Phaser.Scene {
             x: player.x,
             y: player.y,
         }
+        this.mapEdited();
     }
 
     update(delta) {
@@ -83,20 +90,9 @@ class MainScene extends Phaser.Scene {
 
         if (this.pointerDown) {
 
-            // selected tool start point
-            if (this.selectedTool === 3) {
-                this.placePlayer(pointer.worldX, pointer.worldY);
-            }
-
-            if (this.selectedTool === 2) {
-
-                let camera = this.cameras.main;
-                camera.scrollX -= (pointer.x - this.previousPointerLoc.x) / camera.zoom;
-                camera.scrollY -= (pointer.y - this.previousPointerLoc.y) / camera.zoom;
-            }
-
             // selected tool = pen
             if (this.selectedTool === 0) {
+
 
                 let cellSize = this.cellSize;
                 let cellX = Math.floor(pointer.worldX / cellSize);
@@ -106,32 +102,55 @@ class MainScene extends Phaser.Scene {
                 let key = cellX + ',' + cellY;
 
 
-                if (!(cellX + ',' + cellY in this.levelData)) {
+                if (!(key in this.tileData)) {
                     let tile = this.tiles.create(cellX * cellSize + cellSize / 2, cellY * cellSize + cellSize / 2, 'tiles', 0);
                     tile.mapKey = key;
 
-                    // selected tool erase
+                    // selected tool erase click or drag
                     tile.on('pointermove', () => {
-                        if (this.selectedTool === 1 && this.input.mousePointer.isDown) {
-                            delete this.levelData[tile.mapKey];
+                        if (this.selectedTool === 1 && this.pointerDown) {
+                            delete this.tileData[tile.mapKey];
                             tile.destroy();
+                            this.mapEdited();
                         }
                     });
                     tile.on('pointerdown', () => {
                         if (this.selectedTool === 1) {
-                            delete this.levelData[tile.mapKey];
+                            delete this.tileData[tile.mapKey];
+                            this.pointerDown = true;
                             tile.destroy();
+                            this.mapEdited();
                         }
                     });
+
                     tile.setInteractive();
-
-
-                    this.levelData[key] = tile;
+                    this.tileData[key] = tile;
+                    this.mapEdited();
                 }
             }
+
+            if (this.selectedTool === 2) {
+
+                let camera = this.cameras.main;
+                camera.scrollX -= (pointer.x - this.previousPointerLoc.x) / camera.zoom;
+                camera.scrollY -= (pointer.y - this.previousPointerLoc.y) / camera.zoom;
+            }
+
+            // selected tool start point
+            if (this.selectedTool === 3) {
+                this.placePlayer(pointer.worldX, pointer.worldY);
+            }
+
         }
         this.previousPointerLoc = pointer.position.clone();
     }
+    mapEdited() {
+        emitter.emit('level-data-changed', {
+            tileData: this.tileData,
+            playerData: this.player,
+        });
+    }
+
 
     playerMovement() {
 
