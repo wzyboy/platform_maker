@@ -135,4 +135,16 @@ canvas {
     display: grid;
     grid-template-columns: repeat(4, 4fr);
     grid-auto-rows: 200px;
+    gap: 1rem;
+    padding: 1rem;;
+    &__new {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: #aaa;
+        border-radius: 10px;
+        border: none;
+        font-size: 1.5rem;
+    }
 }

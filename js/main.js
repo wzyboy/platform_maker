@@ -65,6 +65,17 @@ const UI = {
     watch: {
         selectedTool(newTool) {
             this.setTool(newTool);
+        },
+        versionView(newStatus) {
+            if (newStatus) {
+                this.scene.unbindKeys();
+            } else {
+                this.scene.bindKeys();
+            }
+        },
+        currentTab(newIndex) {
+            let tab = this.tabs[newIndex];
+            this.scene.loadMap(tab.mapData);
         }
     },
     methods: {
@@ -80,6 +91,21 @@ const UI = {
         stopGame(index) {
             this.tabs[index].playing = false;
             this.scene.stopGame();
+        },
+        makeNewVersion() {
+            let version = {
+                version: this.versions.length + 1,
+                name: '',
+                mapData: JSON.parse(JSON.stringify(this.tabs[this.currentTab].mapData))
+            }
+            this.versions.push(version);
+        },
+        newTab(index) {
+            this.tabs.push({
+                name: this.versions[index].name,
+                playing: false,
+                mapData: this.versions[index].mapData,
+            })
         }
     },
     mounted() {
@@ -98,8 +124,8 @@ const UI = {
             this.tabs[this.currentTab].mapData.tileData = keys.map(key => {
                 let split = key.split(',');
                 return {
-                   x: split[0],
-                   y: split[1], 
+                    x: split[0],
+                    y: split[1],
                 }
             });
         })

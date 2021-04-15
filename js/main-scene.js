@@ -16,11 +16,16 @@ class MainScene extends Phaser.Scene {
                 frameHeight: 16,
             });
 
+        this.bindKeys();
+    }
+    bindKeys() {
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-
+    }
+    unbindKeys() {
+        this.input.keyboard.clearCaptures();
     }
     create() {
 
@@ -103,28 +108,7 @@ class MainScene extends Phaser.Scene {
 
 
                 if (!(key in this.tileData)) {
-                    let tile = this.tiles.create(cellX * cellSize + cellSize / 2, cellY * cellSize + cellSize / 2, 'tiles', 0);
-                    tile.mapKey = key;
-
-                    // selected tool erase click or drag
-                    tile.on('pointermove', () => {
-                        if (this.selectedTool === 1 && this.pointerDown) {
-                            delete this.tileData[tile.mapKey];
-                            tile.destroy();
-                            this.mapEdited();
-                        }
-                    });
-                    tile.on('pointerdown', () => {
-                        if (this.selectedTool === 1) {
-                            delete this.tileData[tile.mapKey];
-                            this.pointerDown = true;
-                            tile.destroy();
-                            this.mapEdited();
-                        }
-                    });
-
-                    tile.setInteractive();
-                    this.tileData[key] = tile;
+                    this.newTile(cellX, cellY);
                     this.mapEdited();
                 }
             }
@@ -149,6 +133,34 @@ class MainScene extends Phaser.Scene {
             tileData: this.tileData,
             playerData: this.player,
         });
+    }
+
+    newTile(cellX, cellY) {
+        let key = cellX + ',' + cellY;
+        let cellSize = this.cellSize;
+        let tile = this.tiles.create(cellX * cellSize + cellSize / 2, cellY * cellSize + cellSize / 2, 'tiles', 0);
+        tile.mapKey = key;
+
+        // selected tool erase click or drag
+        tile.on('pointermove', () => {
+            if (this.selectedTool === 1 && this.pointerDown) {
+                delete this.tileData[tile.mapKey];
+                tile.destroy();
+                this.mapEdited();
+            }
+        });
+        tile.on('pointerdown', () => {
+            if (this.selectedTool === 1) {
+                delete this.tileData[tile.mapKey];
+                this.pointerDown = true;
+                tile.destroy();
+                this.mapEdited();
+            }
+        });
+
+        tile.setInteractive();
+        this.tileData[key] = tile;
+        
     }
 
 
@@ -183,5 +195,17 @@ class MainScene extends Phaser.Scene {
         this.player.y = this.player.startPosition.y;
         this.player.setVelocityX(0);
         this.player.setVelocityY(0);
+    }
+
+    loadMap(mapData) {
+        for (let key in this.tileData) {
+            this.tileData[key].destroy();
+        }
+        this.tileData = {};
+
+        let tileData = mapData.tileData;
+        tileData.forEach(tile => {
+            this.newTile(tile.x, tile.y);
+        });
     }
 }
