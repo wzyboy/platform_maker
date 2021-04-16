@@ -144,6 +144,7 @@ class MainScene extends Phaser.Scene {
         // selected tool erase click or drag
         tile.on('pointermove', () => {
             if (this.selectedTool === 1 && this.pointerDown) {
+                this.toggleNeighbourCollision(cellX, cellY);
                 delete this.tileData[tile.mapKey];
                 tile.destroy();
                 this.mapEdited();
@@ -151,6 +152,7 @@ class MainScene extends Phaser.Scene {
         });
         tile.on('pointerdown', () => {
             if (this.selectedTool === 1) {
+                this.toggleNeighbourCollision(cellX, cellY);
                 delete this.tileData[tile.mapKey];
                 this.pointerDown = true;
                 tile.destroy();
@@ -160,9 +162,31 @@ class MainScene extends Phaser.Scene {
 
         tile.setInteractive();
         this.tileData[key] = tile;
-        
+        this.toggleNeighbourCollision(cellX, cellY);
+
     }
 
+
+    toggleNeighbourCollision(x, y) {
+        const ntop = `${x},${y-1}`
+        const nleft = `${x-1},${y}`
+        const nright = `${x+1},${y}`
+        const ndown = `${x},${y+1}`
+
+        let neighbours = [ ntop, nleft, nright, ndown ]
+        console.log(neighbours);
+
+        if (ntop in this.tileData) {
+            this.tileData[ntop].body.checkCollision.down ^= true
+        } else if (nleft in this.tileData) {
+            this.tileData[nleft].body.checkCollision.right ^= true
+        } else if (nright in this.tileData) {
+            this.tileData[nright].body.checkCollision.left ^= true
+        } else if (ndown in this.tileData) {
+            this.tileData[ndown].body.checkCollision.top ^= true
+        }
+        console.log(this.tileData);
+    }
 
     playerMovement() {
 
