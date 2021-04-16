@@ -94,7 +94,7 @@ class MainScene extends Phaser.Scene {
         let pos = `${this.player.x},${this.player.y}`;
         if (pos !== this.previousPlayerPos) {
             let timecode = Date.now() - this.startTime;
-            console.log([timecode, this.player.x, this.player.y]);
+            // console.log([timecode, this.player.x, this.player.y]);
             this.trailData.push([timecode, this.player.x, this.player.y]);
             this.trailGraphStale = true;
         }
@@ -108,7 +108,6 @@ class MainScene extends Phaser.Scene {
         // lineTo every dot in trailData
         this.trailData.forEach((item) => {
             let [timecode, x, y] = item;
-            console.log(`draw: ${x}              ${y}`);
             this.trailGraph.lineTo(x, y);
         })
 
@@ -215,9 +214,6 @@ class MainScene extends Phaser.Scene {
         const nright = `${x+1},${y}`
         const ndown = `${x},${y+1}`
 
-        //let neighbours = [ ntop, nleft, nright, ndown ]
-        //console.log(neighbours);
-
         if (ntop in this.tileData) {
             this.tileData[ntop].body.checkCollision.down ^= true
         } else if (nleft in this.tileData) {
@@ -227,7 +223,6 @@ class MainScene extends Phaser.Scene {
         } else if (ndown in this.tileData) {
             this.tileData[ndown].body.checkCollision.top ^= true
         }
-        //console.log(this.tileData);
     }
 
     playerMovement() {
