@@ -60,6 +60,7 @@ const UI = {
                     name: 'Initial',
                     playing: false,
                     mapData: {},
+                    fromVersion: -1,
                 }
             ],
             versions: [],
@@ -108,11 +109,13 @@ const UI = {
 
         },
         makeNewVersion() {
+            let fromVersion = this.tabs[this.currentTab].fromVersion;
             let version = {
                 version: this.versions.length + 1,
                 name: `version ${this.versions.length + 1}`,
                 mapData: JSON.parse(JSON.stringify(this.tabs[this.currentTab].mapData)),
                 createdDate: new Date(Date.now()),
+                fromVersion: fromVersion === -1 ? null : fromVersion,
             }
             this.versions.push(version);
         },
@@ -121,6 +124,7 @@ const UI = {
                 name: `from: ${this.versions[index].name}`,
                 playing: false,
                 mapData: this.versions[index].mapData,
+                fromVersion: this.versions[index].version,
             });
             this.currentTab = this.tabs.length - 1;
             this.versionView = false;

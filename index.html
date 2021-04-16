@@ -59,8 +59,9 @@
                             <i class="fas fa-plus-circle"></i>
                         </button>
                         <div class="version" v-for="(version, index) in versions">
-                            <p>version: {{version.version}}</p>
-                            <p>name: {{version.name}}</p>
+                            <p>version {{version.version}}</p>
+                            <p v-if="version.fromVersion !== null">based on version {{version.fromVersion}}</p>
+                            <p>name: "{{version.name}}"</p>
                             <p>created: {{version.createdDate.toLocaleDateString()}} {{version.createdDate.toLocaleTimeString()}}</p>
                             <input type="text" size="1" v-model="version.name" placeholder="version name">
                             <button @click="newTab(index)">
