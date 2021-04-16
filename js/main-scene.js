@@ -231,5 +231,7 @@ class MainScene extends Phaser.Scene {
         tileData.forEach(tile => {
             this.newTile(tile.x, tile.y);
         });
+
+        this.placePlayer(mapData.playerData.x, mapData.playerData.y);
     }
 }

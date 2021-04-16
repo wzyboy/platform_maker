@@ -13,7 +13,7 @@ const config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 300 },
-            debug: true
+            // debug: true
         }
     },
     scene: [
@@ -73,7 +73,10 @@ const UI = {
                 this.scene.bindKeys();
             }
         },
-        currentTab(newIndex) {
+        currentTab(newIndex, oldIndex) {
+
+            this.stopGame(oldIndex);
+
             let tab = this.tabs[newIndex];
             this.scene.loadMap(tab.mapData);
         }
@@ -93,11 +96,12 @@ const UI = {
             this.scene.stopGame();
         },
         closeTab(index) {
-            console.log(index);
+
             if (this.currentTab > this.tabs.length - 2) {
                 this.currentTab = this.tabs.length - 2;
             }
             this.tabs.splice(index, 1);
+
         },
         makeNewVersion() {
             let version = {
@@ -110,7 +114,7 @@ const UI = {
         },
         newTab(index) {
             this.tabs.push({
-                name: this.versions[index].name,
+                name: `from: ${this.versions[index].name}`,
                 playing: false,
                 mapData: this.versions[index].mapData,
             });

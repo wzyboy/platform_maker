@@ -25,7 +25,7 @@
                     <p>versions</p>
                 </button>
                 <div class="top-bar__tab-con">
-                    <div :class="{'top-bar__tab': true, 'top-bar__tab_selected': currentTab === index}" v-for="(tab, index) in tabs" @click.self="currentTab = index">
+                    <div :class="{'top-bar__tab': true, 'top-bar__tab_selected': currentTab === index}" v-for="(tab, index) in tabs" @click="currentTab = index">
                         <p>{{tab.name}}</p>
                         <button v-if="!tab.playing" @click="playGame(index)">
                             <i class="fas fa-play-circle"></i>
@@ -33,7 +33,7 @@
                         <button v-if="tab.playing" @click="stopGame(index)">
                             <i class="fas fa-stop-circle"></i>
                         </button>
-                        <button @click="closeTab(index)" v-if="tabs.length > 1">
+                        <button @click.stop="closeTab(index)" v-if="tabs.length > 1">
                             <i class="fas fa-times-circle"></i>
                         </button>
                     </div>
