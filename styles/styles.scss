@@ -56,6 +56,10 @@ canvas {
             width: 30px;
             height: 30px;
         }
+
+        &_selected {
+            background-color: #fff;
+        }
     }
 }
 .main {
@@ -115,6 +119,7 @@ canvas {
 
 .versions {
     margin: 0 10px;
+    margin-left: 50px;
     padding: 5px 10px;
     display: flex;
     align-items: center;
@@ -126,25 +131,38 @@ canvas {
     }
 }
 .version-view {
-    background-color: #ddd;
+    background-color: #eee;
     position: absolute;
+    box-shadow: 0 10px 10px #0001;
     top: 0;
     left: 0;
-    height: 100%;
-    width: 100%;
+    height: 75%;
+    width: 75%;
+    overflow: auto;
     display: grid;
     grid-template-columns: repeat(4, 4fr);
     grid-auto-rows: 200px;
+    border-radius: 0 0 1rem 0;
     gap: 1rem;
-    padding: 1rem;;
+    padding: 1rem;
     &__new {
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
         background-color: #aaa;
-        border-radius: 10px;
         border: none;
         font-size: 1.5rem;
+        border-radius: 10px;
+        padding: 1rem;
+    }
+    .version {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: #aaa;
+        border-radius: 10px;
+        padding: 1rem;
     }
 }

@@ -25,13 +25,16 @@
                     <p>versions</p>
                 </button>
                 <div class="top-bar__tab-con">
-                    <div class="top-bar__tab" v-for="(tab, index) in tabs" @click="currentTab = index">
+                    <div :class="{'top-bar__tab': true, 'top-bar__tab_selected': currentTab === index}" v-for="(tab, index) in tabs" @click.self="currentTab = index">
                         <p>{{tab.name}}</p>
                         <button v-if="!tab.playing" @click="playGame(index)">
                             <i class="fas fa-play-circle"></i>
                         </button>
                         <button v-if="tab.playing" @click="stopGame(index)">
                             <i class="fas fa-stop-circle"></i>
+                        </button>
+                        <button @click="closeTab(index)" v-if="tabs.length > 1">
+                            <i class="fas fa-times-circle"></i>
                         </button>
                     </div>
                 </div>
@@ -52,15 +55,15 @@
                     <div id="viewport"></div>
                     <div class="version-view" v-show="versionView">
                         <button class="version-view__new" @click="makeNewVersion">
-                            <p>new version</p>
+                            <p>save current tab to new version</p>
                             <i class="fas fa-plus-circle"></i>
                         </button>
-                        <div v-for="(version, index) in versions">
+                        <div class="version" v-for="(version, index) in versions">
                             <p>version: {{version.version}}</p>
                             <p>name: {{version.name}}</p>
-                            <input type="text" v-model="version.name">
+                            <input type="text" v-model="version.name" placeholder="version name">
                             <button @click="newTab(index)">
-                                view
+                                open in tab
                             </button>
                         </div>
                     </div>
