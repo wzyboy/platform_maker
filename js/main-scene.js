@@ -39,9 +39,11 @@ class MainScene extends Phaser.Scene {
         this.tiles = this.physics.add.staticGroup();
         this.tileData = {};
 
-        // trail data: an array of (timecode, pos)
+        // trail data: an array of (timecode, x, y)
         this.trailData = [];
+        this.trailGraph = this.add.graphics();
         this.startTime = Date.now();
+        this.trailGraphStale = true;
 
         // create players
         this.placePlayer(camera.width / 2, camera.height / 2);
@@ -92,9 +94,26 @@ class MainScene extends Phaser.Scene {
         let pos = `${this.player.x},${this.player.y}`;
         if (pos !== this.previousPlayerPos) {
             let timecode = Date.now() - this.startTime;
-            console.log([timecode, pos]);
-            this.trailData.push([timecode, pos]);
+            console.log([timecode, this.player.x, this.player.y]);
+            this.trailData.push([timecode, this.player.x, this.player.y]);
+            this.trailGraphStale = true;
         }
+    }
+
+    drawPlayerTrail() {
+
+        this.trailGraph.lineStyle(1, 0xFF00FF, 0.2);
+        this.trailGraph.beginPath();
+
+        // lineTo every dot in trailData
+        this.trailData.forEach((item) => {
+            let [timecode, x, y] = item;
+            console.log(`draw: ${x}              ${y}`);
+            this.trailGraph.lineTo(x, y);
+        })
+
+        this.trailGraph.strokePath();
+
     }
 
     update(delta) {
@@ -136,6 +155,16 @@ class MainScene extends Phaser.Scene {
             // selected tool start point
             if (this.selectedTool === 3) {
                 this.placePlayer(pointer.worldX, pointer.worldY);
+            }
+
+
+            // draw hisotry
+            if (this.selectedTool === 4) {
+                if (this.trailGraphStale) {
+                    this.trailGraph.clear();
+                    this.drawPlayerTrail();
+                    this.trailGraphStale = true;
+                }
             }
 
         }
