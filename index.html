@@ -61,9 +61,10 @@
                         <div class="version" v-for="(version, index) in versions">
                             <p>version: {{version.version}}</p>
                             <p>name: {{version.name}}</p>
-                            <input type="text" v-model="version.name" placeholder="version name">
+                            <p>created: {{version.createdDate.toLocaleDateString()}} {{version.createdDate.toLocaleTimeString()}}</p>
+                            <input type="text" size="1" v-model="version.name" placeholder="version name">
                             <button @click="newTab(index)">
-                                open in tab
+                                open in new tab
                             </button>
                         </div>
                     </div>

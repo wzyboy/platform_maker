@@ -103,7 +103,8 @@ const UI = {
             let version = {
                 version: this.versions.length + 1,
                 name: `version ${this.versions.length + 1}`,
-                mapData: JSON.parse(JSON.stringify(this.tabs[this.currentTab].mapData))
+                mapData: JSON.parse(JSON.stringify(this.tabs[this.currentTab].mapData)),
+                createdDate: new Date(Date.now()),
             }
             this.versions.push(version);
         },
