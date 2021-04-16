@@ -39,6 +39,10 @@ class MainScene extends Phaser.Scene {
         this.tiles = this.physics.add.staticGroup();
         this.tileData = {};
 
+        // trail data: an array of (timecode, pos)
+        this.trailData = [];
+        this.startTime = Date.now();
+
         // create players
         this.placePlayer(camera.width / 2, camera.height / 2);
         this.player.body.moves = false;
@@ -82,6 +86,15 @@ class MainScene extends Phaser.Scene {
             y: player.y,
         }
         this.mapEdited();
+    }
+
+    recordPlayerPos() {
+        let pos = `${this.player.x},${this.player.y}`;
+        if (pos !== this.previousPlayerPos) {
+            let timecode = Date.now() - this.startTime;
+            console.log([timecode, pos]);
+            this.trailData.push([timecode, pos]);
+        }
     }
 
     update(delta) {
@@ -173,8 +186,8 @@ class MainScene extends Phaser.Scene {
         const nright = `${x+1},${y}`
         const ndown = `${x},${y+1}`
 
-        let neighbours = [ ntop, nleft, nright, ndown ]
-        console.log(neighbours);
+        //let neighbours = [ ntop, nleft, nright, ndown ]
+        //console.log(neighbours);
 
         if (ntop in this.tileData) {
             this.tileData[ntop].body.checkCollision.down ^= true
@@ -185,7 +198,7 @@ class MainScene extends Phaser.Scene {
         } else if (ndown in this.tileData) {
             this.tileData[ndown].body.checkCollision.top ^= true
         }
-        console.log(this.tileData);
+        //console.log(this.tileData);
     }
 
     playerMovement() {
@@ -193,19 +206,25 @@ class MainScene extends Phaser.Scene {
         if (this.keyA.isDown) {
             this.player.setVelocityX(-160);
             this.player.flipX = true;
+            this.recordPlayerPos();
         }
         else if (this.keyD.isDown) {
             this.player.setVelocityX(160);
             this.player.flipX = false;
+            this.recordPlayerPos();
 
         }
         else {
             this.player.setVelocityX(0);
+            this.recordPlayerPos();
 
         }
         if (this.keyW.isDown && this.player.body.touching.down) {
             this.player.setVelocityY(-230);
+            this.recordPlayerPos();
         }
+
+        this.previousPlayerPos = `${this.player.x},${this.player.y}`;
     }
 
     playGame() {
