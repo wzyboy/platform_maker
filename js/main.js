@@ -49,6 +49,10 @@ const UI = {
                     name: 'start point',
                     icon: 'sign-in-alt'
                 },
+                {
+                    name: 'draw history',
+                    icon: 'history'
+                },
             ],
             currentTab: 0,
             tabs: [
