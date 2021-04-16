@@ -44,6 +44,8 @@ class MainScene extends Phaser.Scene {
         this.trailGraph = this.add.graphics();
         this.startTime = Date.now();
         this.trailGraphStale = true;
+        this.trailSampleInterval = 100;
+        this.trailSampleTime = Date.now();
 
         // create players
         this.placePlayer(camera.width / 2, camera.height / 2);
@@ -92,11 +94,13 @@ class MainScene extends Phaser.Scene {
 
     recordPlayerPos() {
         let pos = `${this.player.x},${this.player.y}`;
-        if (pos !== this.previousPlayerPos) {
+        if (pos !== this.previousPlayerPos && (Date.now() - this.trailSampleTime > this.trailSampleInterval)) {
+            console.log(pos);
             let timecode = Date.now() - this.startTime;
             // console.log([timecode, this.player.x, this.player.y]);
             this.trailData.push([timecode, this.player.x, this.player.y]);
             this.trailGraphStale = true;
+            this.trailSampleTime = Date.now();
         }
     }
 
