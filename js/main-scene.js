@@ -95,7 +95,6 @@ class MainScene extends Phaser.Scene {
     recordPlayerPos() {
         let pos = `${this.player.x},${this.player.y}`;
         if (pos !== this.previousPlayerPos && (Date.now() - this.trailSampleTime > this.trailSampleInterval)) {
-            console.log(pos);
             let timecode = Date.now() - this.startTime;
             // console.log([timecode, this.player.x, this.player.y]);
             this.trailData.push([timecode, this.player.x, this.player.y]);
@@ -256,8 +255,14 @@ class MainScene extends Phaser.Scene {
     }
 
     playGame() {
+        console.log('hello');
         this.player.body.moves = true;
         this.playing = true;
+        this.oldCameraPosition = {
+            x: this.cameras.main.scrollX,
+            y: this.cameras.main.scrollY,
+        }
+        this.cameras.main.startFollow(this.player, false, .01, .01);
     }
     stopGame() {
         this.playing = false;
@@ -266,6 +271,13 @@ class MainScene extends Phaser.Scene {
         this.player.y = this.player.startPosition.y;
         this.player.setVelocityX(0);
         this.player.setVelocityY(0);
+
+        this.cameras.main.stopFollow(this.player);
+        if (this.oldCameraPosition !== undefined) {
+            this.cameras.main.scrollX = this.oldCameraPosition.x;
+            this.cameras.main.scrollY = this.oldCameraPosition.y;
+            delete this.oldCameraPosition;
+        }
     }
 
     loadMap(mapData) {
