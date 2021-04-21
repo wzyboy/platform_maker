@@ -255,7 +255,6 @@ class MainScene extends Phaser.Scene {
     }
 
     playGame() {
-        console.log('hello');
         this.player.body.moves = true;
         this.playing = true;
         this.oldCameraPosition = {
@@ -280,18 +279,33 @@ class MainScene extends Phaser.Scene {
         }
     }
 
-    loadMap(mapData) {
+    sleep(delay){
+        return new Promise((resolve) => setTimeout(resolve, delay));
+    }
+
+    async loadMap(mapDataJson) {
+
+
         for (let key in this.tileData) {
             this.tileData[key].destroy();
             delete this.tileData[key];
         }
         // this.tileData = {};
 
-        let tileData = mapData.tileData;
-        tileData.forEach(tile => {
-            this.newTile(tile.x, tile.y);
-        });
+        // let mapData = JSON.parse(mapDataJson);
+        // console.log(mapData);
+        // let tileData = mapData.tileData;
+        // tileData.forEach(tile => {
+        // });
+        // this.placePlayer(mapData.playerData.x, mapData.playerData.y);
 
-        this.placePlayer(mapData.playerData.x, mapData.playerData.y);
+        for (let y = 0; y < 10; y++) {
+            for (let x = 0; x < 10; x++) {
+                await this.sleep(100);
+                console.log(`${x}, ${y}`)
+                this.newTile(x + 50, y + 30);
+            }
+        }
+
     }
 }

@@ -34,7 +34,7 @@ const UI = {
             selectedTool: -1,
             tools: [
                 {
-                    name: 'edit',
+                    name: 'draw',
                     icon: 'pen'
                 },
                 {
@@ -50,7 +50,7 @@ const UI = {
                     icon: 'sign-in-alt'
                 },
                 {
-                    name: 'draw history',
+                    name: 'trail',
                     icon: 'history'
                 },
             ],
@@ -117,7 +117,7 @@ const UI = {
             let version = {
                 version: this.versions.length + 1,
                 name: `version ${this.versions.length + 1}`,
-                mapData: JSON.parse(JSON.stringify(this.tabs[this.currentTab].mapData)),
+                mapData: this.tabs[this.currentTab].mapData,
                 createdDate: new Date(Date.now()),
                 fromVersion: fromVersion === -1 ? null : fromVersion,
             }
@@ -141,19 +141,22 @@ const UI = {
             this.setTool(this.selectedTool);
         });
         emitter.on('level-data-changed', mapInfo => {
-            this.tabs[this.currentTab].mapData.playerData = {
+            let mapData = {};
+            mapData.playerData = {
                 x: mapInfo.playerData.x,
                 y: mapInfo.playerData.y,
             }
 
             let keys = Object.keys(mapInfo.tileData);
-            this.tabs[this.currentTab].mapData.tileData = keys.map(key => {
+            mapData.tileData = keys.map(key => {
                 let split = key.split(',');
                 return {
                     x: split[0],
                     y: split[1],
                 }
             });
+
+            this.tabs[this.currentTab].mapData = JSON.stringify(mapData);
         })
     }
 }
