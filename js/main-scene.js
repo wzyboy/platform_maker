@@ -212,20 +212,20 @@ class MainScene extends Phaser.Scene {
 
 
     toggleNeighbourCollision(x, y) {
-        const ntop = `${x},${y-1}`
-        const nleft = `${x-1},${y}`
-        const nright = `${x+1},${y}`
-        const ndown = `${x},${y+1}`
+        // const ntop = `${x},${y-1}`
+        // const nleft = `${x-1},${y}`
+        // const nright = `${x+1},${y}`
+        // const ndown = `${x},${y+1}`
 
-        if (ntop in this.tileData) {
-            this.tileData[ntop].body.checkCollision.down ^= true
-        } else if (nleft in this.tileData) {
-            this.tileData[nleft].body.checkCollision.right ^= true
-        } else if (nright in this.tileData) {
-            this.tileData[nright].body.checkCollision.left ^= true
-        } else if (ndown in this.tileData) {
-            this.tileData[ndown].body.checkCollision.top ^= true
-        }
+        // if (ntop in this.tileData) {
+        //     this.tileData[ntop].body.checkCollision.down ^= true
+        // } else if (nleft in this.tileData) {
+        //     this.tileData[nleft].body.checkCollision.right ^= true
+        // } else if (nright in this.tileData) {
+        //     this.tileData[nright].body.checkCollision.left ^= true
+        // } else if (ndown in this.tileData) {
+        //     this.tileData[ndown].body.checkCollision.top ^= true
+        // }
     }
 
     playerMovement() {
@@ -283,8 +283,9 @@ class MainScene extends Phaser.Scene {
     loadMap(mapData) {
         for (let key in this.tileData) {
             this.tileData[key].destroy();
+            delete this.tileData[key];
         }
-        this.tileData = {};
+        // this.tileData = {};
 
         let tileData = mapData.tileData;
         tileData.forEach(tile => {
