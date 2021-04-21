@@ -64,13 +64,35 @@ class MainScene extends Phaser.Scene {
         });
 
         // tell vue js scene finished loading
-        emitter.emit('scene-load', this);
+        emitter.emit('scene-load');
         this.mapEdited();
 
-        // events
+        // event listeners
         emitter.on('load-map', (mapData) => {
-          this.loadMap(mapData);
-        })
+            this.loadMap(mapData);
+        });
+
+        emitter.on('version-view', (newStatus) => {
+            if (newStatus) {
+                this.unbindKeys();
+            } else {
+                this.bindKeys();
+            }
+        });
+
+        emitter.on('stop-game', () => {
+            this.stopGame();
+        });
+
+        emitter.on('play-game', () => {
+            this.playGame();
+        });
+
+        emitter.on('set-tool', (newTool) => {
+            this.selectedTool = newTool;
+        });
+
+
     }
 
     placePlayer(x, y) {

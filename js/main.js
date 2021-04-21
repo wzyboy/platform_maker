@@ -72,11 +72,7 @@ const UI = {
             this.setTool(newTool);
         },
         versionView(newStatus) {
-            if (newStatus) {
-                this.scene.unbindKeys();
-            } else {
-                this.scene.bindKeys();
-            }
+            emitter.emit('version-view', newStatus);
         },
         currentTab(newIndex, oldIndex) {
 
@@ -91,17 +87,15 @@ const UI = {
     },
     methods: {
         setTool(newTool) {
-            if (this.scene) {
-                this.scene.selectedTool = newTool;
-            }
+            emitter.emit('set-tool', newTool);
         },
         playGame(index) {
             this.tabs[index].playing = true;
-            this.scene.playGame();
+            emitter.emit('play-game');
         },
         stopGame(index) {
             this.tabs[index].playing = false;
-            this.scene.stopGame();
+            emitter.emit('stop-game');
         },
         closeTab(index) {
 
@@ -136,8 +130,7 @@ const UI = {
     },
     mounted() {
         this.selectedTool = 0;
-        emitter.on('scene-load', scene => {
-            this.scene = scene;
+        emitter.on('scene-load', () => {
             this.setTool(this.selectedTool);
         });
         emitter.on('level-data-changed', mapInfo => {
