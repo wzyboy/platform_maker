@@ -80,8 +80,11 @@ const UI = {
         },
         currentTab(newIndex, oldIndex) {
 
-            this.stopGame(oldIndex);
-
+            if (this.tabs[oldIndex] !== undefined) {
+                this.stopGame(oldIndex);
+            }
+            
+            this.stopGame(newIndex);
             let tab = this.tabs[newIndex];
             this.scene.loadMap(tab.mapData);
         }
@@ -105,6 +108,7 @@ const UI = {
             if (this.currentTab > this.tabs.length - 2) {
                 this.currentTab = this.tabs.length - 2;
             }
+
             this.tabs.splice(index, 1);
 
         },
