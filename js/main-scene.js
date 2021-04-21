@@ -66,6 +66,11 @@ class MainScene extends Phaser.Scene {
         // tell vue js scene finished loading
         emitter.emit('scene-load', this);
         this.mapEdited();
+
+        // events
+        emitter.on('load-map', (mapData) => {
+          this.loadMap(mapData);
+        })
     }
 
     placePlayer(x, y) {

@@ -86,7 +86,7 @@ const UI = {
             
             this.stopGame(newIndex);
             let tab = this.tabs[newIndex];
-            this.scene.loadMap(tab.mapData);
+            emitter.emit('load-map', tab.mapData);
         }
     },
     methods: {
