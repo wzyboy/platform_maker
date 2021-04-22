@@ -13,7 +13,7 @@ const config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 300 },
-            debug: true
+            // debug: true
         }
     },
     scene: [
@@ -22,12 +22,7 @@ const config = {
 };
 const game = new Phaser.Game(config);
 
-const gameStatus = {
-
-};
-
-
-const UI = {
+let vue = Vue.createApp({
     data() {
         return {
             selectedTool: 0,
@@ -78,17 +73,20 @@ const UI = {
             }
         },
         currentTab(newIndex, oldIndex) {
-
+            // tab id changed
+            // stop old game if it is running
             // check if the old tab is closed
             if (this.tabs[oldIndex] !== undefined) {
                 this.stopGame(oldIndex);
+                // save old map's data and call to start new tab
+                emitter.emit('get-map-data', {
+                    callback: this.startNewTab,
+                    tabIndex: oldIndex,
+                })
+            } else {
+                this.startNewTab();
             }
 
-            // save old map's data
-            emitter.emit('get-map-data', {
-                callback: this.startNewTab,
-                tabIndex: oldIndex,
-            })
 
         }
     },
@@ -126,23 +124,35 @@ const UI = {
         finalizeVersion() {
             let fromVersion = this.tabs[this.currentTab].fromVersion;
             let version = {
-                version: this.versions.length + 1,
-                name: `version ${this.versions.length + 1}`,
+                version: this.versions.length,
+                name: `version ${this.versions.length}`,
                 mapData: this.tabs[this.currentTab].mapData,
                 createdDate: new Date(Date.now()),
                 fromVersion: fromVersion === -1 ? null : fromVersion,
             }
             this.versions.push(version);
         },
-        newTab(index) {
+        newTab(versionNumber) {
+            let version = this.versions.find(v => v.version === versionNumber);
+
             this.tabs.push({
-                name: `from: ${this.versions[index].name}`,
+                name: `from: ${version.name}`,
                 playing: false,
-                mapData: this.versions[index].mapData,
-                fromVersion: this.versions[index].version,
+                mapData: version.mapData,
+                fromVersion: version.version,
             });
             this.currentTab = this.tabs.length - 1;
             this.versionView = false;
+        }
+    },
+    computed: {
+        rootVersions() {
+            // return [];
+            return this.versions.filter(version => version.fromVersion === null);
+        },
+        subVersions() {
+            // return [];
+            return this.versions.filter(version => version.fromVersion !== null);
         }
     },
     mounted() {
@@ -153,7 +163,25 @@ const UI = {
             this.tabs[response.tabIndex].mapData = response.json;
             response.callback(response.tabIndex);
         });
-    }
-}
 
-let ui = Vue.createApp(UI).mount('#ui')
+        this.makeNewVersion();
+        this.newTab(0);
+    }
+});
+
+vue.component('version-tree', {
+    template: '#version-tree',
+    emits: ['new-tab'],
+    props: [
+        'currentVersion',
+        'versions',
+    ],
+    computed: {
+        filteredVersion() {
+            return this.versions.filter(version => version.fromVersion === this.currentVersion.version);
+        }
+    }
+});
+
+
+vue.mount('#ui');
