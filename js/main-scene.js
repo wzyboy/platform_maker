@@ -18,15 +18,7 @@ class MainScene extends Phaser.Scene {
 
         this.bindKeys();
     }
-    bindKeys() {
-        this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-    }
-    unbindKeys() {
-        this.input.keyboard.clearCaptures();
-    }
+
     create() {
 
         // set camera
@@ -39,6 +31,28 @@ class MainScene extends Phaser.Scene {
         this.tiles = this.physics.add.staticGroup();
         this.tileData = {};
 
+        // create player
+        this.placePlayer(camera.width / 2, camera.height / 2);
+        this.player.body.moves = false;
+        let playerSizeReduce = this.player.width / 5;
+        this.player.body.setSize(
+            this.player.width - playerSizeReduce,
+            this.player.width - playerSizeReduce);
+        this.player.body.offset = {
+            x: playerSizeReduce / 2,
+            y: playerSizeReduce
+        };
+
+        // this.player.body.setBodySize(
+        //     this.player.width / 2 - playerSizeReduce,
+        //     this.player.width / 2 - playerSizeReduce,
+        //     playerSizeReduce,
+        //     playerSizeReduce * 2);
+
+        // start check collision between tiles and player
+        this.physics.add.collider(this.player, this.tiles);
+
+
         // trail data: an array of (timecode, x, y)
         this.trailData = [];
         this.trailGraph = this.add.graphics();
@@ -46,13 +60,6 @@ class MainScene extends Phaser.Scene {
         this.trailGraphStale = true;
         this.trailSampleInterval = 100;
         this.trailSampleTime = Date.now();
-
-        // create players
-        this.placePlayer(camera.width / 2, camera.height / 2);
-        this.player.body.moves = false;
-
-        // check collision between tiles and player
-        this.physics.add.collider(this.player, this.tiles);
 
         // pointer click event
         this.pointerDown = false;
@@ -63,86 +70,27 @@ class MainScene extends Phaser.Scene {
             this.pointerDown = false;
         });
 
-        // tell vue js scene finished loading
-        emitter.emit('scene-load');
-        this.mapEdited();
+
 
         // event listeners
-        emitter.on('load-map', (mapData) => {
-            this.loadMap(mapData);
-        });
+        emitter.on('load-map', (mapDataJson) => this.loadMap(mapDataJson));
 
-        emitter.on('version-view', (newStatus) => {
-            if (newStatus) {
-                this.unbindKeys();
-            } else {
-                this.bindKeys();
-            }
-        });
+        emitter.on('bind-keys', () => this.unbindKeys());
+        emitter.on('unbind-keys', () => this.bindKeys());
 
-        emitter.on('stop-game', () => {
-            this.stopGame();
-        });
+        emitter.on('stop-game', () => this.stopGame());
+        emitter.on('start-game', () => this.startGame());
 
-        emitter.on('play-game', () => {
-            this.playGame();
-        });
+        emitter.on('get-map-data', (request) => emitter.emit('map-data', {
+            json: this.getMapJson(),
+            callback: request.callback,
+            tabIndex: request.tabIndex,
+        }));
 
-        emitter.on('set-tool', (newTool) => {
-            this.selectedTool = newTool;
-        });
+        emitter.on('set-tool', (newTool) => this.selectedTool = newTool);
 
-
-    }
-
-    placePlayer(x, y) {
-        let player = this.player;
-        if (player === undefined) {
-            player = this.physics.add.sprite(0, 0, 'tiles', 13);
-            // player.setCircle(player.displayWidth / 2);
-            this.player = player;
-        }
-        let cellSize = this.cellSize;
-        let cellX = Math.floor(x / cellSize);
-        let cellY = Math.floor(y / cellSize);
-
-        player.x = cellX * cellSize + cellSize / 2;
-        player.y = cellY * cellSize + cellSize / 2;
-
-        this.player.setVelocityX(0);
-        this.player.setVelocityY(0);
-
-        player.startPosition = {
-            x: player.x,
-            y: player.y,
-        }
-        this.mapEdited();
-    }
-
-    recordPlayerPos() {
-        let pos = `${this.player.x},${this.player.y}`;
-        if (pos !== this.previousPlayerPos && (Date.now() - this.trailSampleTime > this.trailSampleInterval)) {
-            let timecode = Date.now() - this.startTime;
-            // console.log([timecode, this.player.x, this.player.y]);
-            this.trailData.push([timecode, this.player.x, this.player.y]);
-            this.trailGraphStale = true;
-            this.trailSampleTime = Date.now();
-        }
-    }
-
-    drawPlayerTrail() {
-
-        this.trailGraph.lineStyle(1, 0xFF00FF, 0.2);
-        this.trailGraph.beginPath();
-
-        // lineTo every dot in trailData
-        this.trailData.forEach((item) => {
-            let [timecode, x, y] = item;
-            this.trailGraph.lineTo(x, y);
-        })
-
-        this.trailGraph.strokePath();
-
+        // tell vue js scene finished loading
+        emitter.emit('scene-load');
     }
 
     update(delta) {
@@ -170,7 +118,6 @@ class MainScene extends Phaser.Scene {
 
                 if (!(key in this.tileData)) {
                     this.newTile(cellX, cellY);
-                    this.mapEdited();
                 }
             }
 
@@ -199,11 +146,75 @@ class MainScene extends Phaser.Scene {
         }
         this.previousPointerLoc = pointer.position.clone();
     }
-    mapEdited() {
-        emitter.emit('level-data-changed', {
-            tileData: this.tileData,
-            playerData: this.player,
+
+    placePlayer(x, y) {
+        let player = this.player;
+        if (player === undefined) {
+            player = this.physics.add.sprite(0, 0, 'tiles', 13);
+            // player.setCircle(player.displayWidth / 2);
+            this.player = player;
+        }
+        let cellSize = this.cellSize;
+        let cellX = Math.floor(x / cellSize);
+        let cellY = Math.floor(y / cellSize);
+
+        player.x = cellX * cellSize + cellSize / 2;
+        player.y = cellY * cellSize + cellSize / 2;
+
+        this.player.setVelocityX(0);
+        this.player.setVelocityY(0);
+
+        player.startPosition = {
+            x: player.x,
+            y: player.y,
+        }
+    }
+
+    recordPlayerPos() {
+        let pos = `${this.player.x},${this.player.y}`;
+        if (pos !== this.previousPlayerPos && (Date.now() - this.trailSampleTime > this.trailSampleInterval)) {
+            let timecode = Date.now() - this.startTime;
+            // console.log([timecode, this.player.x, this.player.y]);
+            this.trailData.push([timecode, this.player.x, this.player.y]);
+            this.trailGraphStale = true;
+            this.trailSampleTime = Date.now();
+        }
+    }
+
+    drawPlayerTrail() {
+
+        this.trailGraph.lineStyle(1, 0xFF00FF, 0.2);
+        this.trailGraph.beginPath();
+
+        // lineTo every dot in trailData
+        this.trailData.forEach((item) => {
+            let [timecode, x, y] = item;
+            this.trailGraph.lineTo(x, y);
+        })
+
+        this.trailGraph.strokePath();
+
+    }
+
+    getMapJson() {
+        let mapData = {};
+
+
+        mapData.playerData = {
+            x: this.player.x,
+            y: this.player.y,
+        }
+
+        let keys = Object.keys(this.tileData);
+        mapData.tileData = keys.map(key => {
+            let split = key.split(',');
+            return {
+                x: split[0],
+                y: split[1],
+            }
         });
+
+        return JSON.stringify(mapData);
     }
 
     newTile(cellX, cellY) {
@@ -218,7 +229,6 @@ class MainScene extends Phaser.Scene {
                 this.toggleNeighbourCollision(cellX, cellY);
                 delete this.tileData[tile.mapKey];
                 tile.destroy();
-                this.mapEdited();
             }
         });
         tile.on('pointerdown', () => {
@@ -227,7 +237,6 @@ class MainScene extends Phaser.Scene {
                 delete this.tileData[tile.mapKey];
                 this.pointerDown = true;
                 tile.destroy();
-                this.mapEdited();
             }
         });
 
@@ -239,20 +248,20 @@ class MainScene extends Phaser.Scene {
 
 
     toggleNeighbourCollision(x, y) {
-        // const ntop = `${x},${y-1}`
-        // const nleft = `${x-1},${y}`
-        // const nright = `${x+1},${y}`
-        // const ndown = `${x},${y+1}`
+        const ntop = `${x},${y - 1}`
+        const nleft = `${x - 1},${y}`
+        const nright = `${x + 1},${y}`
+        const ndown = `${x},${y + 1}`
 
-        // if (ntop in this.tileData) {
-        //     this.tileData[ntop].body.checkCollision.down ^= true
-        // } else if (nleft in this.tileData) {
-        //     this.tileData[nleft].body.checkCollision.right ^= true
-        // } else if (nright in this.tileData) {
-        //     this.tileData[nright].body.checkCollision.left ^= true
-        // } else if (ndown in this.tileData) {
-        //     this.tileData[ndown].body.checkCollision.top ^= true
-        // }
+        if (ntop in this.tileData) {
+            this.tileData[ntop].body.checkCollision.down ^= true
+        } else if (nleft in this.tileData) {
+            this.tileData[nleft].body.checkCollision.right ^= true
+        } else if (nright in this.tileData) {
+            this.tileData[nright].body.checkCollision.left ^= true
+        } else if (ndown in this.tileData) {
+            this.tileData[ndown].body.checkCollision.top ^= true
+        }
     }
 
     playerMovement() {
@@ -281,7 +290,7 @@ class MainScene extends Phaser.Scene {
         this.previousPlayerPos = `${this.player.x},${this.player.y}`;
     }
 
-    playGame() {
+    startGame() {
         this.player.body.moves = true;
         this.playing = true;
         this.oldCameraPosition = {
@@ -306,33 +315,41 @@ class MainScene extends Phaser.Scene {
         }
     }
 
-    sleep(delay){
+    sleep(delay) {
         return new Promise((resolve) => setTimeout(resolve, delay));
     }
 
     async loadMap(mapDataJson) {
 
-
+        // delete old amp
         for (let key in this.tileData) {
             this.tileData[key].destroy();
             delete this.tileData[key];
         }
-        // this.tileData = {};
 
-        // let mapData = JSON.parse(mapDataJson);
-        // console.log(mapData);
-        // let tileData = mapData.tileData;
-        // tileData.forEach(tile => {
-        // });
-        // this.placePlayer(mapData.playerData.x, mapData.playerData.y);
+        // add in new tiles
+        let mapData = JSON.parse(mapDataJson);
 
-        for (let y = 0; y < 10; y++) {
-            for (let x = 0; x < 10; x++) {
-                await this.sleep(100);
-                console.log(`${x}, ${y}`)
-                this.newTile(x + 50, y + 30);
-            }
+        let tileData = mapData.tileData;
+        for (let tile of tileData) {
+
+            // slow loading
+            // await this.sleep(1);
+            this.newTile(tile.x, tile.y);
         }
 
+        // player attributes
+        this.placePlayer(mapData.playerData.x, mapData.playerData.y);
+    }
+
+
+    bindKeys() {
+        this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    }
+    unbindKeys() {
+        this.input.keyboard.clearCaptures();
     }
 }

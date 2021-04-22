@@ -30,8 +30,7 @@ const gameStatus = {
 const UI = {
     data() {
         return {
-            scene: null,
-            selectedTool: -1,
+            selectedTool: 0,
             tools: [
                 {
                     name: 'draw',
@@ -72,26 +71,38 @@ const UI = {
             this.setTool(newTool);
         },
         versionView(newStatus) {
-            emitter.emit('version-view', newStatus);
+            if (newStatus) {
+                emitter.emit('bind-keys');
+            } else {
+                emitter.emit('unbind-keys');
+            }
         },
         currentTab(newIndex, oldIndex) {
 
+            // check if the old tab is closed
             if (this.tabs[oldIndex] !== undefined) {
                 this.stopGame(oldIndex);
             }
-            
-            this.stopGame(newIndex);
-            let tab = this.tabs[newIndex];
-            emitter.emit('load-map', tab.mapData);
+
+            // save old map's data
+            emitter.emit('get-map-data', {
+                callback: this.startNewTab,
+                tabIndex: oldIndex,
+            })
+
         }
     },
     methods: {
+        startNewTab() {
+            this.stopGame(this.currentTab);
+            emitter.emit('load-map', this.tabs[this.currentTab].mapData);
+        },
         setTool(newTool) {
             emitter.emit('set-tool', newTool);
         },
         playGame(index) {
             this.tabs[index].playing = true;
-            emitter.emit('play-game');
+            emitter.emit('start-game');
         },
         stopGame(index) {
             this.tabs[index].playing = false;
@@ -107,6 +118,12 @@ const UI = {
 
         },
         makeNewVersion() {
+            emitter.emit('get-map-data', {
+                callback: this.finalizeVersion,
+                tabIndex: this.currentTab,
+            });
+        },
+        finalizeVersion() {
             let fromVersion = this.tabs[this.currentTab].fromVersion;
             let version = {
                 version: this.versions.length + 1,
@@ -129,28 +146,13 @@ const UI = {
         }
     },
     mounted() {
-        this.selectedTool = 0;
         emitter.on('scene-load', () => {
             this.setTool(this.selectedTool);
         });
-        emitter.on('level-data-changed', mapInfo => {
-            let mapData = {};
-            mapData.playerData = {
-                x: mapInfo.playerData.x,
-                y: mapInfo.playerData.y,
-            }
-
-            let keys = Object.keys(mapInfo.tileData);
-            mapData.tileData = keys.map(key => {
-                let split = key.split(',');
-                return {
-                    x: split[0],
-                    y: split[1],
-                }
-            });
-
-            this.tabs[this.currentTab].mapData = JSON.stringify(mapData);
-        })
+        emitter.on('map-data', response => {
+            this.tabs[response.tabIndex].mapData = response.json;
+            response.callback(response.tabIndex);
+        });
     }
 }
 
