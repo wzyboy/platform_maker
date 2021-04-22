@@ -158,14 +158,17 @@ let vue = Vue.createApp({
     mounted() {
         emitter.on('scene-load', () => {
             this.setTool(this.selectedTool);
+
+            this.makeNewVersion();
+            this.tabs[0].name = 'initial v0'
+            this.tabs[0].fromVersion = 0;
         });
         emitter.on('map-data', response => {
             this.tabs[response.tabIndex].mapData = response.json;
             response.callback(response.tabIndex);
         });
 
-        this.makeNewVersion();
-        this.newTab(0);
+        // this.newTab(0);
     }
 });
 
