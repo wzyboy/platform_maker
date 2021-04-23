@@ -25,6 +25,7 @@ class MainScene extends Phaser.Scene {
         let camera = this.cameras.main;
         camera.zoom = 3;
         camera.setBackgroundColor('RGBA(135, 206, 235, 1)');
+        this.saveCameraLocation();
 
 
         // create tiles container
@@ -248,6 +249,8 @@ class MainScene extends Phaser.Scene {
 
 
     toggleNeighbourCollision(x, y) {
+        x = parseInt(x);
+        y = parseInt(y);
 
         /**
          * C = center
@@ -286,7 +289,8 @@ class MainScene extends Phaser.Scene {
         const tDL = keyDL in this.tileData;
         const tDR = keyDR in this.tileData;
 
-
+        // console.log(` U:${keyU} D:${keyD} L:${keyL} R:${keyR}`);
+        // console.log(` U:${tU} D:${tD} L:${tL} R:${tR}`);
 
         if (tC) {
             let tile = this.tileData[keyC];
@@ -347,6 +351,7 @@ class MainScene extends Phaser.Scene {
             const keyDL = `${x - 1},${y + 1}`;
             const keyDR = `${x + 1},${y + 1}`;
 
+            // is air at that location
             const tU = !(keyU in this.tileData);
             const tD = !(keyD in this.tileData);
             const tL = !(keyL in this.tileData);
@@ -360,10 +365,75 @@ class MainScene extends Phaser.Scene {
             let tile = this.tileData[keyC];
 
             switch (true) {
+                // air in every corner
+                case !tU && !tD && !tL && !tR && tUL && tUR && tDL && tDR:
+                    tile.setTexture('tiles', 36);
+                    break;
+
+                // t shapes with dirt
+                case tUL && !tU && tUR && !tR && !tDR && !tD && !tDL && !tL:
+                    tile.setTexture('tiles', 57);
+                    break;
+                case !tUL && !tU && tUR && !tR && tDR && !tD && !tDL && !tL:
+                    tile.setTexture('tiles', 71);
+                    break;
+                case !tUL && !tU && !tUR && !tR && tDR && !tD && tDL && !tL:
+                    tile.setTexture('tiles', 83);
+                    break;
+                case tUL && !tU && !tUR && !tR && !tDR && !tD && tDL && !tL:
+                    tile.setTexture('tiles', 69);
+                    break;
+
+
+                // t shapes
+                case tUL && !tU && tUR && !tR && tD && !tL:
+                    tile.setTexture('tiles', 47);
+                    break;
+                case !tU && tUR && !tR && tDR && !tD && tL:
+                    tile.setTexture('tiles', 48);
+                    break;
+                case tU && !tR && tDR && !tD && tDL && !tL:
+                    tile.setTexture('tiles', 34);
+                    break;
+                case tUL && !tU && tR && !tD && tDL && !tL:
+                    tile.setTexture('tiles', 49);
+                    break;
+
+                // half t vertical
+                case !tU && tUR && !tR && !tDR && !tD && tL:
+                    tile.setTexture('tiles', 54);
+                    break;
+                case tUL && !tU && tR && !tD && !tDL && !tL:
+                    tile.setTexture('tiles', 55);
+                    break;
+                case !tU && !tUR && !tR && tDR && !tD && tL:
+                    tile.setTexture('tiles', 67);
+                    break;
+                case !tUL && !tU && tR && !tD && tDL && !tL:
+                    tile.setTexture('tiles', 68);
+                    break;
+
+                // half t horizontal
+                case tU && !tR && !tDR && !tD && tDL && !tL:
+                    tile.setTexture('tiles', 56);
+                    break;
+                case tU && !tR && tDR && !tD && !tDL && !tL:
+                    tile.setTexture('tiles', 58);
+                    break;
+                case tUL && !tU && !tUR && !tR && tD && !tL:
+                    tile.setTexture('tiles', 82);
+                    break;
+                case !tUL && !tU && tUR && !tR && tD && !tL:
+                    tile.setTexture('tiles', 84);
+                    break;
+
+
+
                 // air everywhere
                 case tU && tD && tL && tR:
                     tile.setTexture('tiles', 35);
                     break;
+
 
                 // end caps
                 case tD && tL && tR:
@@ -483,14 +553,16 @@ class MainScene extends Phaser.Scene {
 
         this.previousPlayerPos = `${this.player.x},${this.player.y}`;
     }
-
-    startGame() {
-        this.player.body.moves = true;
-        this.playing = true;
+    saveCameraLocation() {
         this.oldCameraPosition = {
             x: this.cameras.main.scrollX,
             y: this.cameras.main.scrollY,
         }
+    }
+    startGame() {
+        this.player.body.moves = true;
+        this.playing = true;
+        this.saveCameraLocation();
         this.cameras.main.startFollow(this.player, false, .01, .01);
     }
     stopGame() {
@@ -502,7 +574,7 @@ class MainScene extends Phaser.Scene {
         this.player.setVelocityY(0);
 
         this.cameras.main.stopFollow(this.player);
-        if (this.oldCameraPosition !== undefined) {
+        if (this.oldCameraPosition == undefined) {
             this.cameras.main.scrollX = this.oldCameraPosition.x;
             this.cameras.main.scrollY = this.oldCameraPosition.y;
             delete this.oldCameraPosition;
@@ -528,7 +600,7 @@ class MainScene extends Phaser.Scene {
         for (let tile of tileData) {
 
             // slow loading
-            // await this.sleep(1);
+            // await this.sleep(100);
             this.newTile(tile.x, tile.y);
         }
 
