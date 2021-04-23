@@ -242,25 +242,47 @@ class MainScene extends Phaser.Scene {
 
         tile.setInteractive();
         this.tileData[key] = tile;
+        
         this.toggleNeighbourCollision(cellX, cellY);
-
     }
 
 
     toggleNeighbourCollision(x, y) {
-        const ntop = `${x},${y - 1}`
-        const nleft = `${x - 1},${y}`
-        const nright = `${x + 1},${y}`
-        const ndown = `${x},${y + 1}`
+        const keyC = `${x},${y}`;
 
-        if (ntop in this.tileData) {
-            this.tileData[ntop].body.checkCollision.down ^= true
-        } else if (nleft in this.tileData) {
-            this.tileData[nleft].body.checkCollision.right ^= true
-        } else if (nright in this.tileData) {
-            this.tileData[nright].body.checkCollision.left ^= true
-        } else if (ndown in this.tileData) {
-            this.tileData[ndown].body.checkCollision.top ^= true
+        const keyU = `${x},${y - 1}`
+        const keyD = `${x},${y + 1}`
+        const keyL = `${x - 1},${y}`
+        const keyR = `${x + 1},${y}`
+
+
+        const blockOnC = keyC in this.tileData
+
+        const blockOnU = keyU in this.tileData
+        const blockOnD = keyD in this.tileData
+        const blockOnL = keyL in this.tileData
+        const blockOnR = keyR in this.tileData
+ 
+
+        if (blockOnC) {
+            let tile = this.tileData[keyC];
+            tile.body.checkCollision.up = !blockOnU;
+            tile.body.checkCollision.down = !blockOnD;
+            tile.body.checkCollision.left = !blockOnL;
+            tile.body.checkCollision.right = !blockOnR;
+        }
+
+        if (blockOnU) {
+            this.tileData[keyU].body.checkCollision.down = !blockOnC;
+        }
+        if (blockOnD) {
+            this.tileData[keyD].body.checkCollision.up = !blockOnC;
+        }
+        if (blockOnL) {
+            this.tileData[keyL].body.checkCollision.right = !blockOnC;
+        }
+        if (blockOnR) {
+            this.tileData[keyR].body.checkCollision.left = !blockOnC;
         }
     }
 
