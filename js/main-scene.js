@@ -220,69 +220,241 @@ class MainScene extends Phaser.Scene {
     newTile(cellX, cellY) {
         let key = cellX + ',' + cellY;
         let cellSize = this.cellSize;
-        let tile = this.tiles.create(cellX * cellSize + cellSize / 2, cellY * cellSize + cellSize / 2, 'tiles', 0);
+        let tile = this.tiles.create(cellX * cellSize + cellSize / 2, cellY * cellSize + cellSize / 2, 'tiles', 35);
         tile.mapKey = key;
 
         // selected tool erase click or drag
         tile.on('pointermove', () => {
             if (this.selectedTool === 1 && this.pointerDown) {
-                this.toggleNeighbourCollision(cellX, cellY);
                 delete this.tileData[tile.mapKey];
                 tile.destroy();
+                this.toggleNeighbourCollision(cellX, cellY);
             }
         });
         tile.on('pointerdown', () => {
             if (this.selectedTool === 1) {
-                this.toggleNeighbourCollision(cellX, cellY);
                 delete this.tileData[tile.mapKey];
                 this.pointerDown = true;
                 tile.destroy();
+                this.toggleNeighbourCollision(cellX, cellY);
             }
         });
 
         tile.setInteractive();
         this.tileData[key] = tile;
-        
+
         this.toggleNeighbourCollision(cellX, cellY);
     }
 
 
     toggleNeighbourCollision(x, y) {
+
+        /**
+         * C = center
+         * U = up
+         * D = down
+         * L = left
+         * R = right
+         * 
+         * UL = upper left
+         * DL = downer left
+         * 
+         * t = tile exists
+         * 
+         * tUL = tile exists on upper left 
+         */
         const keyC = `${x},${y}`;
 
-        const keyU = `${x},${y - 1}`
-        const keyD = `${x},${y + 1}`
-        const keyL = `${x - 1},${y}`
-        const keyR = `${x + 1},${y}`
+        const keyU = `${x},${y - 1}`;
+        const keyD = `${x},${y + 1}`;
+        const keyL = `${x - 1},${y}`;
+        const keyR = `${x + 1},${y}`;
+        const keyUL = `${x - 1},${y - 1}`;
+        const keyUR = `${x + 1},${y - 1}`;
+        const keyDL = `${x - 1},${y + 1}`;
+        const keyDR = `${x + 1},${y + 1}`;
 
 
-        const blockOnC = keyC in this.tileData
+        const tC = keyC in this.tileData;
 
-        const blockOnU = keyU in this.tileData
-        const blockOnD = keyD in this.tileData
-        const blockOnL = keyL in this.tileData
-        const blockOnR = keyR in this.tileData
- 
+        const tU = keyU in this.tileData;
+        const tD = keyD in this.tileData;
+        const tL = keyL in this.tileData;
+        const tR = keyR in this.tileData;
+        const tUL = keyUL in this.tileData;
+        const tUR = keyUR in this.tileData;
+        const tDL = keyDL in this.tileData;
+        const tDR = keyDR in this.tileData;
 
-        if (blockOnC) {
+
+
+        if (tC) {
             let tile = this.tileData[keyC];
-            tile.body.checkCollision.up = !blockOnU;
-            tile.body.checkCollision.down = !blockOnD;
-            tile.body.checkCollision.left = !blockOnL;
-            tile.body.checkCollision.right = !blockOnR;
+
+            // set collision
+            tile.body.checkCollision.up = !tU;
+            tile.body.checkCollision.down = !tD;
+            tile.body.checkCollision.left = !tL;
+            tile.body.checkCollision.right = !tR;
+
+            this.connectedTexture(keyC);
         }
 
-        if (blockOnU) {
-            this.tileData[keyU].body.checkCollision.down = !blockOnC;
+        // other block's collisions
+        if (tU) {
+            this.tileData[keyU].body.checkCollision.down = !tC;
+            this.connectedTexture(keyU);
         }
-        if (blockOnD) {
-            this.tileData[keyD].body.checkCollision.up = !blockOnC;
+        if (tD) {
+            this.tileData[keyD].body.checkCollision.up = !tC;
+            this.connectedTexture(keyD);
         }
-        if (blockOnL) {
-            this.tileData[keyL].body.checkCollision.right = !blockOnC;
+        if (tL) {
+            this.tileData[keyL].body.checkCollision.right = !tC;
+            this.connectedTexture(keyL);
         }
-        if (blockOnR) {
-            this.tileData[keyR].body.checkCollision.left = !blockOnC;
+        if (tR) {
+            this.tileData[keyR].body.checkCollision.left = !tC;
+            this.connectedTexture(keyR);
+        }
+
+        if (tUL) this.connectedTexture(keyUL);
+        if (tUR) this.connectedTexture(keyUR);
+        if (tDL) this.connectedTexture(keyDL);
+        if (tDR) this.connectedTexture(keyDR);
+    }
+
+    /**
+     * 
+     * @param {string} key a cell key in this format "x,y"
+     */
+    connectedTexture(keyC) {
+        const tC = keyC in this.tileData;
+        if (tC) {
+
+            let [x, y] = keyC.split(',').map(d => parseInt(d));
+
+            // console.log(x)
+            // console.log(y)
+
+            const keyU = `${x},${y - 1}`;
+            const keyD = `${x},${y + 1}`;
+            const keyL = `${x - 1},${y}`;
+            const keyR = `${x + 1},${y}`;
+
+            const keyUL = `${x - 1},${y - 1}`;
+            const keyUR = `${x + 1},${y - 1}`;
+            const keyDL = `${x - 1},${y + 1}`;
+            const keyDR = `${x + 1},${y + 1}`;
+
+            const tU = !(keyU in this.tileData);
+            const tD = !(keyD in this.tileData);
+            const tL = !(keyL in this.tileData);
+            const tR = !(keyR in this.tileData);
+
+            const tUL = !(keyUL in this.tileData);
+            const tUR = !(keyUR in this.tileData);
+            const tDL = !(keyDL in this.tileData);
+            const tDR = !(keyDR in this.tileData);
+
+            let tile = this.tileData[keyC];
+
+            switch (true) {
+                // air everywhere
+                case tU && tD && tL && tR:
+                    tile.setTexture('tiles', 35);
+                    break;
+
+                // end caps
+                case tD && tL && tR:
+                    tile.setTexture('tiles', 46);
+                    break;
+                case tU && tL && tR:
+                    tile.setTexture('tiles', 20);
+                    break;
+                case tU && tD && tR:
+                    tile.setTexture('tiles', 23);
+                    break;
+                case tU && tD && tL:
+                    tile.setTexture('tiles', 21);
+                    break;
+
+                // corner pieces with corner air
+                case tU && tL && tDR:
+                    tile.setTexture('tiles', 24);
+                    break;
+                case tU && tR && tDL:
+                    tile.setTexture('tiles', 25);
+                    break;
+                case tD && tL && tUR:
+                    tile.setTexture('tiles', 37);
+                    break;
+                case tD && tR && tUL:
+                    tile.setTexture('tiles', 38);
+                    break;
+
+                // stick pieces
+                case tU && tD:
+                    tile.setTexture('tiles', 22);
+                    break;
+                case tR && tL:
+                    tile.setTexture('tiles', 33);
+                    break;
+
+                // corner pieces
+                case tU && tL:
+                    tile.setTexture('tiles', 17);
+                    break;
+                case tU && tR:
+                    tile.setTexture('tiles', 19);
+                    break;
+                case tD && tL:
+                    tile.setTexture('tiles', 43);
+                    break;
+                case tD && tR:
+                    tile.setTexture('tiles', 45);
+                    break;
+
+
+
+
+
+
+                // surface pieces
+                case tU:
+                    tile.setTexture('tiles', 18);
+                    break;
+                case tD:
+                    tile.setTexture('tiles', 44);
+                    break;
+                case tL:
+                    tile.setTexture('tiles', 30);
+                    break;
+                case tR:
+                    tile.setTexture('tiles', 32);
+                    break;
+
+
+                // corner air
+                case tUL:
+                    tile.setTexture('tiles', 73);
+                    break;
+                case tUR:
+                    tile.setTexture('tiles', 72);
+                    break;
+                case tDL:
+                    tile.setTexture('tiles', 60);
+                    break;
+                case tDR:
+                    tile.setTexture('tiles', 59);
+                    break;
+
+                // full dirt
+                default:
+                    tile.setTexture('tiles', 31);
+
+            }
+
         }
     }
 
