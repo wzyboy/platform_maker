@@ -47,6 +47,10 @@ let vue = Vue.createApp({
                     name: 'trail',
                     icon: 'history'
                 },
+                {
+                    name: 'clear all',
+                    icon: 'times-circle'
+                },
             ],
             currentTab: 0,
             tabs: [
