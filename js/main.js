@@ -72,7 +72,7 @@ let vue = Vue.createApp({
                 emitter.emit('unbind-keys');
             }
         },
-        currentTab(newIndex, oldIndex) {
+        currentTab(_newIndex, oldIndex) {
             // tab id changed
             // stop old game if it is running
             // check if the old tab is closed

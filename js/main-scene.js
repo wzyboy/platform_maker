@@ -64,10 +64,10 @@ class MainScene extends Phaser.Scene {
 
         // pointer click event
         this.pointerDown = false;
-        this.input.on('pointerdown', (e) => {
+        this.input.on('pointerdown', (_e) => {
             this.pointerDown = true;
         });
-        this.input.on('pointerup', (e) => {
+        this.input.on('pointerup', (_e) => {
             this.pointerDown = false;
         });
 
@@ -94,7 +94,7 @@ class MainScene extends Phaser.Scene {
         emitter.emit('scene-load');
     }
 
-    update(delta) {
+    update(_delta) {
 
         if (this.playing) {
             this.playerMovement();
@@ -189,7 +189,7 @@ class MainScene extends Phaser.Scene {
 
         // lineTo every dot in trailData
         this.trailData.forEach((item) => {
-            let [timecode, x, y] = item;
+            let [_timecode, x, y] = item;
             this.trailGraph.lineTo(x, y);
         })
 
