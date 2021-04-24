@@ -135,17 +135,7 @@ canvas {
 }
 
 .versions {
-    margin: 0 10px;
-    margin-left: 50px;
-    padding: 5px 10px;
-    display: flex;
-    align-items: center;
-    background-color: #eee;
-    border: none;
-    font-size: 1rem;
-    > p {
-        margin: 0;
-    }
+    margin-bottom: auto;
 }
 .version-view {
     background-color: #eee;
