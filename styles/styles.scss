@@ -84,8 +84,8 @@ canvas {
     display: flex;
 }
 .tool-bar {
-    width: 50px;
-    background-color: #555;
+    width: 80px;
+    background-color: var(--secondary);
     display: flex;
     justify-content: center;
     flex-direction: column;

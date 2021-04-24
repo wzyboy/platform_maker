@@ -29,27 +29,33 @@ let vue = Vue.createApp({
             tools: [
                 {
                     name: 'draw',
-                    icon: 'pen'
+                    icon: 'pen',
+                    icon_img: 'tool_build.png'
                 },
                 {
                     name: 'erase',
-                    icon: 'eraser'
+                    icon: 'eraser',
+                    icon_img: 'tool_remove.png'
                 },
                 {
                     name: 'pan',
-                    icon: 'arrows-alt'
+                    icon: 'arrows-alt',
+                    icon_img: 'tool_pan.png'
                 },
                 {
                     name: 'start point',
-                    icon: 'sign-in-alt'
+                    icon: 'sign-in-alt',
+                    icon_img: 'tool_start_point.png'
                 },
                 {
                     name: 'trail',
-                    icon: 'history'
+                    icon: 'history',
+                    icon_img: 'tool_trail.png'
                 },
                 {
                     name: 'clear all',
-                    icon: 'times-circle'
+                    icon: 'times-circle',
+                    icon_img: 'tool_trash.png'
                 },
             ],
             currentTab: 0,

@@ -53,7 +53,7 @@
                         @click="selectedTool = index"
                         v-for="(tool, index) in tools"
                     >
-                        <i :class="'fas fa-' + tool.icon"></i>
+                        <img :src="'assets/' + tool.icon_img" />
                         <p>{{tool.name}}</p>
                     </button>
                 </div>
