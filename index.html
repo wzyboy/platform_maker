@@ -96,6 +96,7 @@
 
         <template type="text/x-template" id="version-tree">
             <div class="version">
+                <button class="btn-new-tab" @click="$emit('new-tab', currentVersion.version)">+</button>
                 <p>version: {{currentVersion.version}}</p>
                 <p v-if="currentVersion.fromVersion !== null">
                     based on version {{currentVersion.fromVersion}}
@@ -111,9 +112,6 @@
                     v-model="currentVersion.name"
                     placeholder="currentVersion name"
                 /> -->
-                <button @click="$emit('new-tab', currentVersion.version)">
-                    open in new tab
-                </button>
             </div>
 
             <div class="version-row">
