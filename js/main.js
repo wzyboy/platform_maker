@@ -52,11 +52,6 @@ let vue = Vue.createApp({
                     icon: 'history',
                     icon_img: 'tool_trail.png'
                 },
-                {
-                    name: 'clear all',
-                    icon: 'times-circle',
-                    icon_img: 'tool_trash.png'
-                },
             ],
             currentTab: 0,
             tabs: [

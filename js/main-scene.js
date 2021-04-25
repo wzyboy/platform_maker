@@ -144,12 +144,6 @@ class MainScene extends Phaser.Scene {
                 }
             }
 
-            // clear all
-            if (this.selectedTool == 5) {
-                this.tileData = {};
-                this.tiles.clear(true, true);
-            }
-
         }
 
         this.trailGraph.clear();
