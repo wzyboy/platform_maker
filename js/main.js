@@ -137,6 +137,7 @@ let vue = Vue.createApp({
 
             this.tabs.push({
                 name: `from: ${version.name}`,
+                versionNumber: versionNumber,
                 playing: false,
                 mapData: version.mapData,
                 fromVersion: version.version,
@@ -159,6 +160,9 @@ let vue = Vue.createApp({
         subVersions() {
             // return [];
             return this.versions.filter(version => version.fromVersion !== null);
+        },
+        currentTabObject() {
+            return this.tabs[this.currentTab];
         }
     },
     mounted() {
@@ -167,6 +171,7 @@ let vue = Vue.createApp({
 
             this.makeNewVersion();
             this.tabs[0].name = 'initial v0'
+            this.tabs[0].versionNumber = 0;
             this.tabs[0].fromVersion = 0;
         });
         emitter.on('map-data', response => {
@@ -183,6 +188,7 @@ vue.component('version-tree', {
     emits: ['new-tab'],
     props: [
         'currentVersion',
+        'currentTabObject',
         'versions',
     ],
     computed: {

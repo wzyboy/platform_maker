@@ -205,6 +205,10 @@ canvas {
         padding: 1rem;
         position: relative;
 
+        &--current {
+            border: 10px solid var(--primary);
+        }
+
         > button.btn-new-tab {
             position: absolute;
             top: 0px;

@@ -86,6 +86,7 @@
                             <version-tree
                                 :versions="subVersions"
                                 :current-version="version"
+                                :current-tab-object="currentTabObject"
                                 @new-tab="newTab($event)"
                             ></version-tree>
                         </div>
@@ -95,7 +96,8 @@
         </div>
 
         <template type="text/x-template" id="version-tree">
-            <div class="version">
+            <!--div class="version"-->
+            <div :class="{'version': true, 'version--current': currentTabObject.versionNumber === currentVersion.version}">
                 <button class="btn-new-tab" @click="$emit('new-tab', currentVersion.version)">+</button>
                 <p>version: {{currentVersion.version}}</p>
                 <p v-if="currentVersion.fromVersion !== null">
@@ -120,6 +122,7 @@
                     <version-tree
                         :versions="versions"
                         :current-version="version"
+                        :current-tab-object="currentTabObject"
                         @new-tab="$emit('new-tab', $event)"
                     >
                     </version-tree>
