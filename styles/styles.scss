@@ -1,6 +1,14 @@
 @import 'fontawesome.scss';
 @import 'solid.scss';
 
+:root {
+  --primary: #FFE600;
+  --secondary: #5800AF;
+  --secondary-darker: #420085;
+  --shadow: #1B0053;
+  --background: #0E0424;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -29,27 +37,34 @@ canvas {
 }
 
 .top-bar {
-    height: 50px;
-    background-color: #ccc;
+    height: 80px;
+    background-color: var(--shadow);
     display: flex;
+    border: 10px solid var(--secondary);
+    border-bottom: none;
 
     &__tab-con {
         flex: 1;
         display: flex;
         height: 100%;
+        margin-left: 60px;
     }
     &__tab {
         height: 100%;
-        background-color: #aaa;
+        background-color: var(--secondary-darker);
         display: flex;
         align-items: center;
+        margin: 10px;
         padding: 10px;
-        border-radius: 1rem 1rem 0 0;
+        border: 10px solid var(--shadow);
+        border-bottom: none;
         > p {
+            color: var(--primary);
             margin: 0;
             margin-right: 30px;
         }
         > button {
+            color: var(--primary);
             border: none;
             background: none;
             font-size: 1rem;
@@ -58,7 +73,10 @@ canvas {
         }
 
         &_selected {
-            background-color: #fff;
+            color: var(--background);
+            border: 10px solid var(--secondary);
+            background-color: var(--background);
+            border-bottom: none;
         }
     }
 }
@@ -67,8 +85,8 @@ canvas {
     display: flex;
 }
 .tool-bar {
-    width: 50px;
-    background-color: #555;
+    width: 80px;
+    background-color: var(--secondary);
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -118,17 +136,7 @@ canvas {
 }
 
 .versions {
-    margin: 0 10px;
-    margin-left: 50px;
-    padding: 5px 10px;
-    display: flex;
-    align-items: center;
-    background-color: #eee;
-    border: none;
-    font-size: 1rem;
-    > p {
-        margin: 0;
-    }
+    margin-bottom: auto;
 }
 .version-view {
     background-color: #eee;

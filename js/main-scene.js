@@ -24,7 +24,7 @@ class MainScene extends Phaser.Scene {
         // set camera
         let camera = this.cameras.main;
         camera.zoom = 3;
-        camera.setBackgroundColor('RGBA(135, 206, 235, 1)');
+        camera.setBackgroundColor('RGBA(14, 4, 36, 1)');
         this.saveCameraLocation();
 
 
