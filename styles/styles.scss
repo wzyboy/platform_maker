@@ -79,6 +79,31 @@ canvas {
             border-bottom: none;
         }
     }
+
+    &__dropdown-con {
+        display: flex;
+        justify-content: space-evenly;
+        //background-color: var(--primary);
+        width: 200px;
+        height: 80px;
+        position: absolute;
+        margin: 70px 50%;
+        z-index: 10;
+    }
+    &__dropdown-button {
+        height: 50px;
+        width: 50px;
+        > img {
+            border-radius: 0 0 10px 10px;
+        }
+        > p {
+            margin: 0;
+            font-size: 0.8rem;
+            text-align: center;
+            color: var(--primary);
+            background-color: var(--secondary);
+        }
+    }
 }
 .main {
     flex: 1;

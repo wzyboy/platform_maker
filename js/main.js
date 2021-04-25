@@ -47,16 +47,6 @@ let vue = Vue.createApp({
                     icon: 'sign-in-alt',
                     icon_img: 'tool_start_point.png'
                 },
-                {
-                    name: 'trail',
-                    icon: 'history',
-                    icon_img: 'tool_trail.png'
-                },
-                {
-                    name: 'clear all',
-                    icon: 'times-circle',
-                    icon_img: 'tool_trash.png'
-                },
             ],
             currentTab: 0,
             tabs: [
@@ -153,7 +143,13 @@ let vue = Vue.createApp({
             });
             this.currentTab = this.tabs.length - 1;
             this.versionView = false;
-        }
+        },
+        toggleTrail() {
+            emitter.emit('toggle-trail');
+        },
+        clearTrail() {
+            emitter.emit('clear-trail');
+        },
     },
     computed: {
         rootVersions() {
