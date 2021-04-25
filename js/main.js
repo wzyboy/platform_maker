@@ -47,11 +47,6 @@ let vue = Vue.createApp({
                     icon: 'sign-in-alt',
                     icon_img: 'tool_start_point.png'
                 },
-                {
-                    name: 'trail',
-                    icon: 'history',
-                    icon_img: 'tool_trail.png'
-                },
             ],
             currentTab: 0,
             tabs: [
