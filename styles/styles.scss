@@ -179,6 +179,7 @@ canvas {
     // border-radius: 0 0 1rem 0;
     gap: 1rem;
     padding: 1rem;
+    z-index: 20;
     &__new {
         display: flex;
         justify-content: center;
