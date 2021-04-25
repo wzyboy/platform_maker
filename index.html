@@ -43,13 +43,13 @@
                     </div>
                 </div>
                 <div class="top-bar__dropdown-con">
-                  <div class="top-bar__dropdown-button">
+                  <div class="top-bar__dropdown-button" @click="toggleTrail">
                       <img src="assets/tool_trail.png" />
-                      <p>show track</p>
+                      <p>toggle trail</p>
                   </div>
-                  <div class="top-bar__dropdown-button">
+                  <div class="top-bar__dropdown-button" @click="clearTrail">
                       <img src="assets/tool_clear_track.png" />
-                      <p>clear track</p>
+                      <p>clear trail</p>
                   </div>
                 </div>
             </div>

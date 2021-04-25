@@ -90,6 +90,13 @@ class MainScene extends Phaser.Scene {
 
         emitter.on('set-tool', (newTool) => this.selectedTool = newTool);
 
+        emitter.on('toggle-trail', () => this.trailGraph.setVisible(!this.trailGraph.visible));
+        emitter.on('clear-trail', () => {
+            this.trailGraph.destroy();
+            this.trailGraph = this.add.graphics();
+            this.trailData = [];
+        });
+
         // tell vue js scene finished loading
         emitter.emit('scene-load');
     }
@@ -132,16 +139,6 @@ class MainScene extends Phaser.Scene {
             // selected tool start point
             if (this.selectedTool === 3) {
                 this.placePlayer(pointer.worldX, pointer.worldY);
-            }
-
-
-            // draw hisotry
-            if (this.selectedTool === 4) {
-                if (this.trailGraphStale) {
-                    this.trailGraph.clear();
-                    this.drawPlayerTrail();
-                    this.trailGraphStale = true;
-                }
             }
 
         }

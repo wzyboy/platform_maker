@@ -148,7 +148,13 @@ let vue = Vue.createApp({
             });
             this.currentTab = this.tabs.length - 1;
             this.versionView = false;
-        }
+        },
+        toggleTrail() {
+            emitter.emit('toggle-trail');
+        },
+        clearTrail() {
+            emitter.emit('clear-trail');
+        },
     },
     computed: {
         rootVersions() {
