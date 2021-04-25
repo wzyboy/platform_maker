@@ -64,6 +64,7 @@ let vue = Vue.createApp({
             ],
             versions: [],
             versionView: false,
+            showDropdownButtons: false,
         }
     },
     watch: {
@@ -101,6 +102,12 @@ let vue = Vue.createApp({
             emitter.emit('load-map', this.tabs[this.currentTab].mapData);
         },
         setTool(newTool) {
+            // toggle visibility of dropdown buttons
+            if (newTool === 4) {
+                this.showDropdownButtons = true;
+            } else {
+                this.showDropdownButtons = false;
+            }
             emitter.emit('set-tool', newTool);
         },
         playGame(index) {
