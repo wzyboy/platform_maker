@@ -151,6 +151,9 @@ class MainScene extends Phaser.Scene {
             }
 
         }
+
+        this.trailGraph.clear();
+        this.drawPlayerTrail();
         this.previousPointerLoc = pointer.position.clone();
     }
 
@@ -185,6 +188,10 @@ class MainScene extends Phaser.Scene {
             this.trailData.push([timecode, this.player.x, this.player.y]);
             this.trailGraphStale = true;
             this.trailSampleTime = Date.now();
+            
+            while (this.trailData.length > 1000) {
+                this.trailData.shift();
+            }
         }
     }
 
