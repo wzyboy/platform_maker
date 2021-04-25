@@ -153,6 +153,9 @@ canvas {
             transition: background-color .1s ease;
         }
     }
+    &__spacer {
+        flex: 1;
+    }
 }
 
 .viewport-con {
@@ -160,9 +163,6 @@ canvas {
     flex: 1;
 }
 
-.versions {
-    margin-bottom: auto;
-}
 .version-view {
     background-color: #eee;
     position: absolute;
