@@ -179,6 +179,8 @@ canvas {
     // border-radius: 0 0 1rem 0;
     gap: 1rem;
     padding: 1rem;
+    margin: 20px;
+    border: 10px solid var(--primary);
     z-index: 20;
     &__new {
         display: flex;
