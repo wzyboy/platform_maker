@@ -212,7 +212,7 @@ canvas {
         color: var(--primary);
         background-color: var(--background);
         border: 10px solid var(--secondary);
-        max-width: 200px;
+        width: 200px;
         margin: auto;
 
         &--current {

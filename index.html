@@ -92,21 +92,11 @@
         <template type="text/x-template" id="version-tree">
             <div :class="{'version': true, 'version--current': currentTabObject.versionNumber === currentVersion.version}">
                 <button class="btn-new-tab" @click="$emit('new-tab', currentVersion.version)">+</button>
-                <p>version: {{currentVersion.version}}</p>
-                <p v-if="currentVersion.fromVersion !== null">
-                    based on version {{currentVersion.fromVersion}}
-                </p>
-                <p>name: "{{currentVersion.name}}"</p>
+                <p><b>ver {{currentVersion.version}}</b></p>
                 <p>
-                    created: {{currentVersion.createdDate.toLocaleDateString()}}
+                    {{currentVersion.createdDate.toLocaleDateString()}}
                     {{currentVersion.createdDate.toLocaleTimeString()}}
                 </p>
-                <!-- <input
-                    type="text"
-                    size="1"
-                    v-model="currentVersion.name"
-                    placeholder="currentVersion name"
-                /> -->
                 <button
                     class="version-view__new"
                     v-if="currentTabObject.versionNumber === currentVersion.version"
