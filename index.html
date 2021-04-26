@@ -74,12 +74,6 @@
                 <div class="viewport-con">
                     <div id="viewport"></div>
                     <div class="version-view" v-show="versionView">
-                        <button
-                            class="version-view__new"
-                            @click="makeNewVersion"
-                        >
-                            +
-                        </button>
 
                         <div v-for="version in rootVersions">
                             <version-tree
@@ -87,6 +81,7 @@
                                 :current-version="version"
                                 :current-tab-object="currentTabObject"
                                 @new-tab="newTab($event)"
+                                @make-new-version="makeNewVersion"
                             ></version-tree>
                         </div>
                     </div>
@@ -113,6 +108,13 @@
                     v-model="currentVersion.name"
                     placeholder="currentVersion name"
                 /> -->
+                <button
+                    class="version-view__new"
+                    v-if="currentTabObject.versionNumber === currentVersion.version"
+                    @click="$emit('make-new-version')"
+                >
+                    +
+                </button>
             </div>
 
             <div class="version-lines">
@@ -129,6 +131,7 @@
                         :current-version="version"
                         :current-tab-object="currentTabObject"
                         @new-tab="$emit('new-tab', $event)"
+                        @make-new-version="$emit('make-new-version')"
                     >
                     </version-tree>
                 </div>

@@ -185,7 +185,7 @@ let vue = Vue.createApp({
 
 vue.component('version-tree', {
     template: '#version-tree',
-    emits: ['new-tab'],
+    emits: ['new-tab', 'make-new-version'],
     props: [
         'currentVersion',
         'currentTabObject',
