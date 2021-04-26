@@ -96,6 +96,12 @@ canvas {
         > img {
             border-radius: 0 0 10px 10px;
         }
+        > img + .hide {
+            display: none;
+        }
+        > img:hover + .hide {
+            display: block;
+        }
         > p {
             margin: 0;
             font-size: 0.8rem;
