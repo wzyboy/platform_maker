@@ -96,6 +96,12 @@ canvas {
         > img {
             border-radius: 0 0 10px 10px;
         }
+        > img + .hide {
+            display: none;
+        }
+        > img:hover + .hide {
+            display: block;
+        }
         > p {
             margin: 0;
             font-size: 0.8rem;
@@ -164,13 +170,13 @@ canvas {
 }
 
 .version-view {
-    background-color: #eee;
+    background-color: var(--secondary-darker);
     position: absolute;
     box-shadow: 0 10px 10px #0001;
     top: 0;
     left: 0;
     height: 95%;
-    width: 100%;
+    width: 95%;
     overflow: auto;
     display: grid;
     grid-auto-columns: auto;
@@ -179,17 +185,34 @@ canvas {
     // border-radius: 0 0 1rem 0;
     gap: 1rem;
     padding: 1rem;
+    margin: 20px;
+    border: 10px solid var(--primary);
     z-index: 20;
+
+    > button.btn-close {
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        padding: 0px;
+        border: none;
+        width: 50px;
+        height: 50px;
+    }
+
     &__new {
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        background-color: #aaa;
+        color: var(--background);
+        background-color: var(--primary);
         border: none;
         font-size: 1.5rem;
-        border-radius: 10px;
         padding: 1rem;
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        bottom: -50px;
         > p {
             margin: 0;
             margin-bottom: 10px;
@@ -201,8 +224,35 @@ canvas {
         align-items: center;
         flex-direction: column;
         background-color: #aaa;
-        border-radius: 10px;
         padding: 1rem;
+        position: relative;
+        color: var(--primary);
+        background-color: var(--background);
+        border: 10px solid var(--secondary);
+        width: 200px;
+        margin: auto;
+
+        &--current {
+            border: 10px solid var(--primary);
+            > button.btn-new-tab {
+                background-color: var(--primary) !important;
+            }
+        }
+
+        > button.btn-new-tab {
+            color: var(--background);
+            background-color: var(--secondary);
+            position: absolute;
+            border: none;
+            width: 36px;
+            height: 24px;
+            top: -24px;
+            left: 154px;
+            font-size: 1.2em;
+            &:hover {
+                color: var(--primary);
+            }
+        }
 
         > p {
             margin: 0;
@@ -213,7 +263,42 @@ canvas {
             display: block;
         }
     }
+    .version-lines {
+        display: flex;
+        justify-content: center;
+        .vl {
+            height: 64px;
+            //border: 10px solid var(--secondary);
+            //border-bottom: none;
+        }
+    }
+    .vl-2 {
+        width: 0;
+        border: 5px solid var(--secondary);
+    }
+    .version-col {
+        width: 100%;
+    }
+    .version-col > .version-lines > .vl-1,.vl-3 {
+        width: 100%;
+        border-top: 10px solid var(--secondary);
+    }
+    .version-col:first-child > .version-lines > .vl-1 {
+        border-top: none;
+    }
+    .version-col:last-child > .version-lines > .vl-3 {
+        border-top: none;
+    }
     .version-row {
         display: flex;
+        justify-content: space-around;
+    }
+    .version-agg {
+        display: flex;
+        justify-content: space-around;
+        .agg-box {
+            height: 64px;
+            border: 5px solid var(--secondary);
+        }
     }
 }

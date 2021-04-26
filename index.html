@@ -16,7 +16,7 @@
         <script src="js/main-scene.js"></script>
 
         <script src="https://unpkg.com/vue@next"></script>
-        <title>Document</title>
+        <title>Platform Maker</title>
     </head>
     <body>
         <div id="ui">
@@ -45,11 +45,11 @@
                 <div class="top-bar__dropdown-con">
                   <div class="top-bar__dropdown-button" @click="toggleTrail">
                       <img src="assets/tool_trail.png" />
-                      <p>toggle trail</p>
+                      <p class="hide">toggle trail</p>
                   </div>
                   <div class="top-bar__dropdown-button" @click="clearTrail">
                       <img src="assets/tool_clear_track.png" />
-                      <p>clear trail</p>
+                      <p class="hide">clear trail</p>
                   </div>
                 </div>
             </div>
@@ -74,19 +74,18 @@
                 <div class="viewport-con">
                     <div id="viewport"></div>
                     <div class="version-view" v-show="versionView">
-                        <button
-                            class="version-view__new"
-                            @click="makeNewVersion"
-                        >
-                            <p>save current tab to new version</p>
-                            <i class="fas fa-plus-circle"></i>
+
+                        <button class="btn-close" @click="versionView = !versionView">
+                          <img src="assets/btn_close.png" />
                         </button>
 
                         <div v-for="version in rootVersions">
                             <version-tree
                                 :versions="subVersions"
                                 :current-version="version"
+                                :current-tab-object="currentTabObject"
                                 @new-tab="newTab($event)"
+                                @make-new-version="makeNewVersion"
                             ></version-tree>
                         </div>
                     </div>
@@ -95,34 +94,42 @@
         </div>
 
         <template type="text/x-template" id="version-tree">
-            <div class="version">
-                <p>version: {{currentVersion.version}}</p>
-                <p v-if="currentVersion.fromVersion !== null">
-                    based on version {{currentVersion.fromVersion}}
-                </p>
-                <p>name: "{{currentVersion.name}}"</p>
+            <div :class="{'version': true, 'version--current': currentTabObject.versionNumber === currentVersion.version}">
+                <button class="btn-new-tab" @click="$emit('new-tab', currentVersion.version)"><i class="fas fa-plus"></i></button>
+                <p><b>ver {{currentVersion.version}}</b></p>
                 <p>
-                    created: {{currentVersion.createdDate.toLocaleDateString()}}
+                    {{currentVersion.createdDate.toLocaleDateString()}}
                     {{currentVersion.createdDate.toLocaleTimeString()}}
                 </p>
-                <!-- <input
-                    type="text"
-                    size="1"
-                    v-model="currentVersion.name"
-                    placeholder="currentVersion name"
-                /> -->
-                <button @click="$emit('new-tab', currentVersion.version)">
-                    open in new tab
+                <button
+                    class="version-view__new"
+                    v-if="currentTabObject.versionNumber === currentVersion.version"
+                    @click="$emit('make-new-version')"
+                >
+                    <i class="fas fa-plus"></i>
                 </button>
             </div>
 
+            <div class="version-agg">
+              <div class="agg-box"></div>
+            </div>
+
             <div class="version-row">
-                <div v-for="(version, index) in filteredVersion">
-    
+
+                <div class="version-col" v-for="(version, index) in filteredVersion">
+
+                    <div class="version-lines">
+                      <div class="vl vl-1"></div>
+                      <div class="vl vl-2"></div>
+                      <div class="vl vl-3"></div>
+                    </div>
+
                     <version-tree
                         :versions="versions"
                         :current-version="version"
+                        :current-tab-object="currentTabObject"
                         @new-tab="$emit('new-tab', $event)"
+                        @make-new-version="$emit('make-new-version')"
                     >
                     </version-tree>
                 </div>
