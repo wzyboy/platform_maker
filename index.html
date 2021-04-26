@@ -16,7 +16,7 @@
         <script src="js/main-scene.js"></script>
 
         <script src="https://unpkg.com/vue@next"></script>
-        <title>Document</title>
+        <title>Platform Maker</title>
     </head>
     <body>
         <div id="ui">
@@ -74,6 +74,10 @@
                 <div class="viewport-con">
                     <div id="viewport"></div>
                     <div class="version-view" v-show="versionView">
+
+                        <button class="btn-close" @click="versionView = !versionView">
+                          <img src="assets/btn_close.png" />
+                        </button>
 
                         <div v-for="version in rootVersions">
                             <version-tree
