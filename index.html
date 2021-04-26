@@ -95,7 +95,7 @@
 
         <template type="text/x-template" id="version-tree">
             <div :class="{'version': true, 'version--current': currentTabObject.versionNumber === currentVersion.version}">
-                <button class="btn-new-tab" @click="$emit('new-tab', currentVersion.version)">+</button>
+                <button class="btn-new-tab" @click="$emit('new-tab', currentVersion.version)"><i class="fas fa-plus"></i></button>
                 <p><b>ver {{currentVersion.version}}</b></p>
                 <p>
                     {{currentVersion.createdDate.toLocaleDateString()}}
@@ -106,7 +106,7 @@
                     v-if="currentTabObject.versionNumber === currentVersion.version"
                     @click="$emit('make-new-version')"
                 >
-                    +
+                    <i class="fas fa-plus"></i>
                 </button>
             </div>
 

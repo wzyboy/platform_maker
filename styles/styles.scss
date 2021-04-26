@@ -234,14 +234,24 @@ canvas {
 
         &--current {
             border: 10px solid var(--primary);
+            > button.btn-new-tab {
+                background-color: var(--primary) !important;
+            }
         }
 
         > button.btn-new-tab {
             color: var(--background);
-            background-color: var(--primary);
+            background-color: var(--secondary);
             position: absolute;
-            top: 0px;
-            right: 0px;
+            border: none;
+            width: 36px;
+            height: 24px;
+            top: -24px;
+            left: 154px;
+            font-size: 1.2em;
+            &:hover {
+                color: var(--primary);
+            }
         }
 
         > p {
