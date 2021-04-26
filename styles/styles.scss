@@ -229,7 +229,20 @@ canvas {
             display: block;
         }
     }
+    .version-lines {
+        display: flex;
+        justify-content: space-around;
+        .vl {
+            height: 64px;
+        }
+        @for $i from 1 through 10 {
+            .vl-#{$i} {
+                foo: 100 / $i;
+            }
+        }
+    }
     .version-row {
         display: flex;
+        justify-content: space-around;
     }
 }
