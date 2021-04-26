@@ -122,9 +122,8 @@
                 <div class="version-col" v-for="(version, index) in filteredVersion">
 
                     <div class="version-lines">
-                      <div v-for="(item, index) in filteredVersion">
-                        <div :class="`vl vl-${filteredVersion.length}`">{{ index }}</div>
-                      </div>
+                      <div class="vl vl-1"></div>
+                      <div class="vl vl-2"></div>
                     </div>
 
                     <version-tree

@@ -238,15 +238,34 @@ canvas {
     }
     .version-lines {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
         .vl {
             height: 64px;
+            width: 100%;
+            border: 10px solid var(--secondary);
+            border-bottom: none;
         }
-        @for $i from 1 through 10 {
-            .vl-#{$i} {
-                foo: 100 / $i;
-            }
-        }
+    }
+    .version-col {
+        width: 100%;
+    }
+    .version-col > .version-lines > .vl-1 {
+        border-left: none;
+    }
+    .version-col > .version-lines > .vl-2 {
+        border-right: none;
+    }
+    .version-col:first-child > .version-lines > .vl-1 {
+        border: none;
+    }
+    .version-col:first-child > .version-lines > .vl-2 {
+        border-right: none;
+    }
+    .version-col:last-child > .version-lines > .vl-1 {
+        border-left: none;
+    }
+    .version-col:last-child > .version-lines > .vl-2 {
+        border: none;
     }
     .version-row {
         display: flex;
