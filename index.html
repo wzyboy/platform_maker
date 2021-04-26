@@ -116,14 +116,18 @@
                 </button>
             </div>
 
-            <div style="height: 100px;">SPACER</div>
+            <div class="version-agg">
+              <div class="agg-box"></div>
+            </div>
 
             <div class="version-row">
+
                 <div class="version-col" v-for="(version, index) in filteredVersion">
 
                     <div class="version-lines">
                       <div class="vl vl-1"></div>
                       <div class="vl vl-2"></div>
+                      <div class="vl vl-3"></div>
                     </div>
 
                     <version-tree

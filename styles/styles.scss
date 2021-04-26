@@ -170,7 +170,7 @@ canvas {
     top: 0;
     left: 0;
     height: 95%;
-    width: 100%;
+    width: 95%;
     overflow: auto;
     display: grid;
     grid-auto-columns: auto;
@@ -241,34 +241,37 @@ canvas {
         justify-content: center;
         .vl {
             height: 64px;
-            width: 100%;
-            border: 10px solid var(--secondary);
-            border-bottom: none;
+            //border: 10px solid var(--secondary);
+            //border-bottom: none;
         }
+    }
+    .vl-2 {
+        width: 0;
+        border: 5px solid var(--secondary);
     }
     .version-col {
         width: 100%;
     }
-    .version-col > .version-lines > .vl-1 {
-        border-left: none;
-    }
-    .version-col > .version-lines > .vl-2 {
-        border-right: none;
+    .version-col > .version-lines > .vl-1,.vl-3 {
+        width: 100%;
+        border-top: 10px solid var(--secondary);
     }
     .version-col:first-child > .version-lines > .vl-1 {
-        border: none;
+        border-top: none;
     }
-    .version-col:first-child > .version-lines > .vl-2 {
-        border-right: none;
-    }
-    .version-col:last-child > .version-lines > .vl-1 {
-        border-left: none;
-    }
-    .version-col:last-child > .version-lines > .vl-2 {
-        border: none;
+    .version-col:last-child > .version-lines > .vl-3 {
+        border-top: none;
     }
     .version-row {
         display: flex;
         justify-content: space-around;
+    }
+    .version-agg {
+        display: flex;
+        justify-content: space-around;
+        .agg-box {
+            height: 64px;
+            border: 5px solid var(--secondary);
+        }
     }
 }
