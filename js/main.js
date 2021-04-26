@@ -125,7 +125,7 @@ let vue = Vue.createApp({
             let fromVersion = this.tabs[this.currentTab].fromVersion;
             let version = {
                 version: this.versions.length,
-                name: `version ${this.versions.length}`,
+                name: `ver ${this.versions.length}`,
                 mapData: this.tabs[this.currentTab].mapData,
                 createdDate: new Date(Date.now()),
                 fromVersion: fromVersion === -1 ? null : fromVersion,
